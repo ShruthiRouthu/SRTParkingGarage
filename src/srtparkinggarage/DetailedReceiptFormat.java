@@ -13,7 +13,7 @@ public class DetailedReceiptFormat implements ReceiptFormatStrategy{
 
     private DecimalFormat formatter = new DecimalFormat("#0.00");
     private DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.MEDIUM);
-    
+   
     @Override
     public final String getReceiptString(final String garageName, final TicketStrategy ticket,
             final double parkingFee , final PaymentType payType) throws Exception {

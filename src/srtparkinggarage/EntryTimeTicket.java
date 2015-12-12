@@ -1,7 +1,9 @@
 package srtparkinggarage;
 
 import java.text.DecimalFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Random;
 
@@ -38,22 +40,21 @@ public class EntryTimeTicket implements TicketStrategy{
     
     private void calculateHours() throws Exception{
         
-        this.exitTime = LocalDateTime.now();//LocalDateTime.of(2015, 10, 20, 7, 55, 6,123 );
+        this.exitTime = LocalDateTime.now();
       
         System.out.println( "\n entry time: " + entryTime );
         System.out.println( "\n exit time: " + exitTime + "\n");
         
-        if((entryTime.getYear() == exitTime.getYear()) &&(entryTime.getDayOfYear() == exitTime.getDayOfYear())){
-            
-            // converting time to mins
-            int entryMins = (entryTime.getHour()*60) + entryTime.getMinute() ;
-            int exitMins =  (exitTime.getHour()*60) + exitTime.getMinute() ;     
-            
+        Duration diff = Duration.between(entryTime, exitTime).abs();
+        if(diff.toDays() <= 1){
+               
             // then calculating parking hours  
-            if(exitMins > entryMins){
-                int parkedMins = exitMins-entryMins;
-                double parkedHours = parkedMins/60.0;
-
+            if(entryTime.isBefore(exitTime)){
+                
+                diff = Duration.between(entryTime, exitTime).abs();
+               // long temp = diff.toMinutes();
+                long temp = diff.toMillis(); //considering milli seconds as minutes for practicality
+                double parkedHours = temp/60.0; 
                 this.hoursParked = Double.parseDouble(formatter.format(parkedHours));
                 calcHours = false;
             }
@@ -90,26 +91,6 @@ public class EntryTimeTicket implements TicketStrategy{
             throw new IllegalArgumentException(INVALID_CARID_MSG);
         }
     }
-    
-    
-    
-//    
-//    //UNIT TESTING
-//    public static void main(String[] args) {
-//        NoTimeTicket t = new NoTimeTicket("CAR!))");
-//       try{ System.out.println(t.getHoursParked());}
-//       catch(Exception e){
-//           System.out.println(e.getMessage());
-//       }
-//        
-//        try{ System.out.println(t.getHoursParked());}
-//       catch(Exception e){
-//           System.out.println(e.getMessage());
-//       }
-//       
-//        
-//    }
-//   
 
     @Override
     public int hashCode() {
@@ -142,6 +123,13 @@ public class EntryTimeTicket implements TicketStrategy{
         return "EntryTimeTicket{" + "carID=" + carID + ", ticketID=" + ticketID + '}';
     }
     
-    
-    
+//    //UNIT TESTING
+//    public static void main(String[] args) {
+//        EntryTimeTicket t = new EntryTimeTicket("CAR12", LocalDateTime.now());
+//       try{ System.out.println(t.getHoursParked());}
+//       catch(Exception e){
+//           System.out.println(e.getMessage());
+//       }
+//        
+
 }
