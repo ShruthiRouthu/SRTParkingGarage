@@ -1,0 +1,30 @@
+        
+//        double d = 4.99999999;
+//        int i = (int)d;
+//        System.out.println(i);
+        
+//        Random randomNumber = new Random(System.nanoTime());
+//        int number = randomNumber.nextInt(999999)+ 100000;
+//        System.out.println(number);
+        
+
+
+
+//    Calendar cal = Calendar.getInstance();
+//    DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL,  DateFormat.MEDIUM);
+//
+//    System.out.println(df.format(cal.getTime()));
+//
+//    cal.add(Calendar.HOUR, -4);
+//    System.out.println(df.format(cal.getTime()));
+        
+//System.out.println(df.format(cal.getTime()));    
+//    now = Calendar.getInstance();
+//    now.add(Calendar.MINUTE, -50);
+//  cal.add(Calendar.HOUR, -4);
+//    System.out.println(df.format(cal.getTime()));        
+
+//        
+//        double d = 283.8;
+//        System.out.println(d);
+//        System.out.println((int)Math.floor(d));
