@@ -103,10 +103,7 @@ public class ParkingGarageEntryTerminal {
             return false;
         }
         final ParkingGarageEntryTerminal other = (ParkingGarageEntryTerminal) obj;
-        if (!Objects.equals(this.ticketList, other.ticketList)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.ticketList, other.ticketList);
     }
     
 //    //method to test array behaviour

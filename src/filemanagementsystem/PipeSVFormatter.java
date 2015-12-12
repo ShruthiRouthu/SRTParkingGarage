@@ -1,0 +1,89 @@
+package filemanagementsystem;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ * @author Shruthi Routhu
+ */
+public class PipeSVFormatter implements FormatStrategy {
+
+    private static final String DATE_TIME = "DateTime";
+    private static final String TOTAL_HOURS = "TotalHours";
+    private static final String TOTAL_FEES = "TotalFees";
+  
+    private static final String VALIDATION_MSG = "Input to method is invalid!" ;
+    
+    @Override
+    public final List<String> encode(final List<Map<String, Object>> myFormatData)  throws IllegalArgumentException {
+        if( myFormatData== null || myFormatData.isEmpty()) {
+            throw new IllegalArgumentException(VALIDATION_MSG);
+        }
+        
+        List<String> writeData = new ArrayList<>();
+        int no = myFormatData.size();
+        Map<String, Object> tempMap ;
+        StringBuilder line;
+       
+        for(int i=0; i<no; i++){
+                        
+            tempMap = myFormatData.get(i);
+            line = new StringBuilder();
+                       
+            line.append(tempMap.get(DATE_TIME));
+            line.append("|");
+          
+            line.append(tempMap.get(TOTAL_HOURS));
+            line.append("|");
+          
+            line.append(tempMap.get(TOTAL_FEES));
+                                  
+            writeData.add(line.toString());
+           
+           // System.out.println(writeData.toString());
+        }
+     
+        return writeData;
+    }
+
+    @Override
+    public final List<Map<String, Object>> decode(final List<String> rawData) throws IllegalArgumentException{
+        if( rawData== null || rawData.isEmpty()) {
+            throw new IllegalArgumentException(VALIDATION_MSG);
+        }
+       
+        List<Map<String, Object>> decodedData = new ArrayList<>();
+        
+        // Removing first line from rawData
+        rawData.remove(0);       
+                  
+        // Logic to get value from each line and  to store them in a map
+        
+        String[] lineParts ;
+        Map<String,Object> map ;
+        
+        
+        for(String totalLine : rawData){
+           
+            map = new HashMap<>();
+            totalLine = totalLine.trim();
+            
+            if(!totalLine.isEmpty()){
+                lineParts = totalLine.split("|");
+                
+                if(lineParts.length == 6){
+                    map.put(DATE_TIME, lineParts[0]);
+                    map.put(TOTAL_HOURS, lineParts[1]);
+                    map.put(TOTAL_FEES, lineParts[2]);
+                }       
+                decodedData.add(map);
+            }
+        }
+      
+        return decodedData;
+    }
+    
+}

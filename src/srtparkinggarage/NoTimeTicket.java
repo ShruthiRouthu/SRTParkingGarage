@@ -120,15 +120,15 @@ public class NoTimeTicket implements TicketStrategy{
     }
     
        
-    //UNIT TESTING
-    public static void main(String[] args) {
-        NoTimeTicket t = new NoTimeTicket("CAR!))");
-       try{ System.out.println(t.getHoursParked());}
-       catch(Exception e){
-           System.out.println(e.getMessage());
-       }  
-        
-    }
+//    UNIT TESTING
+//    public static void main(String[] args) {
+//        NoTimeTicket t = new NoTimeTicket("CAR!))");
+//       try{ System.out.println(t.getHoursParked());}
+//       catch(Exception e){
+//           System.out.println(e.getMessage());
+//       }  
+//        
+//    }
 
     
     

@@ -1,8 +1,12 @@
 package srtparkinggarage;
 
+import filemanagementsystem.FileService;
+import filemanagementsystem.FormatStrategy;
+import filemanagementsystem.TextReader;
+import filemanagementsystem.TextWriter;
+import java.io.File;
 import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.Objects;
+
 
 /**
  *
@@ -11,21 +15,28 @@ import java.util.Objects;
 public class RunningTotalManager {
     
     private static final String PARAMETER_NULL_MSG = "Method Parameter cannot be null" ;
+    private static final String INVALID_FILE_MSG = "File not valid" ;
     private static final String INVALID_SUMMARY_MSG = "Invalid checkout summary !";
     private static final String INVALID_STRING_PARAMETER_MSG = "String parameter not valid" ;
    
     private String parkingGarageName ;
-    private OutputStrategy runningTotalOpStrategy ;
+    private final FileService fileService ;
+    private File totalsFile;
+    private FormatStrategy formatStrategy;
     
-    private double parkedHoursToday = 0;
-    private double feeCollectedToday = 0;
-    private DecimalFormat formatter = new DecimalFormat("#0.00");
+    private double parkedHoursToday ;
+    private double feeCollectedToday ;
+    private final DecimalFormat formatter = new DecimalFormat("#0.00");
     
     //CONSTRUCTOR
-    public RunningTotalManager(final String parkingGarageName ,final OutputStrategy outputStrategy) 
-            throws IllegalArgumentException {
+    public RunningTotalManager(final String parkingGarageName, final File totalsFile , 
+            final FormatStrategy formatStrategy) throws IllegalArgumentException {
+       
         setParkingGarageName(parkingGarageName);
-        setRunningTotalOpStrategy(outputStrategy);
+        setTotalsFile(totalsFile);
+        setFormatStrategy(formatStrategy);
+        this.fileService = new FileService(new TextReader(), new TextWriter());
+        
     }
 
     //METHODS
@@ -58,17 +69,29 @@ public class RunningTotalManager {
         
         runningTotalOpStrategy.outputData(outputStr);
     }
-    
-    //SETTER
-    public final void setRunningTotalOpStrategy(final OutputStrategy outputStrategy) throws IllegalArgumentException {
-        if( outputStrategy != null){
-            this.runningTotalOpStrategy = outputStrategy ;
+
+    //SETTERS
+    public void setTotalsFile(File totalsFile) throws IllegalArgumentException {
+        
+        if(  (totalsFile != null) && totalsFile.exists() ){
+            this.totalsFile = totalsFile;
+        }else{
+            throw new IllegalArgumentException(INVALID_FILE_MSG); 
+        }
+        
+    }
+
+    public void setFormatStrategy(FormatStrategy formatStrategy)throws IllegalArgumentException {
+        
+        if( totalsFile != null ){
+            this.formatStrategy = formatStrategy;
         }
         else{
            throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
-        } 
+        }
+        
     }
-    
+   
     public final void setParkingGarageName(final String parkingGarageName)throws IllegalArgumentException {
         
         if((parkingGarageName != null) && (parkingGarageName.length() > 0)){
@@ -92,37 +115,8 @@ public class RunningTotalManager {
         return feeCollectedToday;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.parkingGarageName);
-        hash = 37 * hash + Objects.hashCode(this.runningTotalOpStrategy);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final RunningTotalManager other = (RunningTotalManager) obj;
-        if (!Objects.equals(this.parkingGarageName, other.parkingGarageName)) {
-            return false;
-        }
-        if (!Objects.equals(this.runningTotalOpStrategy, other.runningTotalOpStrategy)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "RunningTotalManager{" + "parkingGarageName=" + parkingGarageName + ", runningTotalOpStrategy=" + runningTotalOpStrategy + '}';
-    }
-    
+    //MANDATORY METHODS  
+   
    
     
     
