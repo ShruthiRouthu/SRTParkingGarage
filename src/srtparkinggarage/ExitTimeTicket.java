@@ -2,6 +2,7 @@ package srtparkinggarage;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -88,6 +89,8 @@ public class ExitTimeTicket implements TicketStrategy{
         }
     }
     
+    
+    
 //    
 //    //UNIT TESTING
 //    public static void main(String[] args) {
@@ -105,5 +108,40 @@ public class ExitTimeTicket implements TicketStrategy{
 //        
 //    }
 //   
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + Objects.hashCode(this.carID);
+        hash = 19 * hash + this.ticketID;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ExitTimeTicket other = (ExitTimeTicket) obj;
+        if (!Objects.equals(this.carID, other.carID)) {
+            return false;
+        }
+        if (this.ticketID != other.ticketID) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ExitTimeTicket{" + "carID=" + carID + ", ticketID=" + ticketID + '}';
+    }
+    
+    
+    
+    
     
 }

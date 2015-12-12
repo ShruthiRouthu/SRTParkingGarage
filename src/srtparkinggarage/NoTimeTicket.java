@@ -3,6 +3,7 @@ package srtparkinggarage;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -103,6 +104,40 @@ public class NoTimeTicket implements TicketStrategy{
 //       
 //        
 //    }
-//    
+//   
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.carID);
+        hash = 47 * hash + this.ticketID;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final NoTimeTicket other = (NoTimeTicket) obj;
+        if (!Objects.equals(this.carID, other.carID)) {
+            return false;
+        }
+        if (this.ticketID != other.ticketID) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "NoTimeTicket{" + "carID=" + carID + ", ticketID=" + ticketID + '}';
+    }
+    
+    
+    
     
 }

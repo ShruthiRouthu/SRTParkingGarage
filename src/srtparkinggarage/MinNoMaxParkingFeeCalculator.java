@@ -72,5 +72,42 @@ public class MinNoMaxParkingFeeCalculator implements ParkingFeeStrategy {
         }  
         return fee;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + (int) (Double.doubleToLongBits(this.minimumCharge) ^ (Double.doubleToLongBits(this.minimumCharge) >>> 32));
+        hash = 41 * hash + (int) (Double.doubleToLongBits(this.minimumChargeHours) ^ (Double.doubleToLongBits(this.minimumChargeHours) >>> 32));
+        hash = 41 * hash + (int) (Double.doubleToLongBits(this.additionalHourlyCharge) ^ (Double.doubleToLongBits(this.additionalHourlyCharge) >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MinNoMaxParkingFeeCalculator other = (MinNoMaxParkingFeeCalculator) obj;
+        if (Double.doubleToLongBits(this.minimumCharge) != Double.doubleToLongBits(other.minimumCharge)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.minimumChargeHours) != Double.doubleToLongBits(other.minimumChargeHours)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.additionalHourlyCharge) != Double.doubleToLongBits(other.additionalHourlyCharge)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "MinNoMaxParkingFeeCalculator{" + "minimumCharge=" + minimumCharge + ", minimumChargeHours=" + minimumChargeHours + ", additionalHourlyCharge=" + additionalHourlyCharge + '}';
+    }
+    
+    
     
 }

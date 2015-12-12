@@ -1,6 +1,7 @@
 package srtparkinggarage;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  *
@@ -91,5 +92,38 @@ public class ParkingGarageManager {
 //    public void getCarList(){
 //        System.out.println(this.entryTerminal.getCarList());
 //    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 13 * hash + Objects.hashCode(this.entryTerminal);
+        hash = 13 * hash + Objects.hashCode(this.exitTerminal);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ParkingGarageManager other = (ParkingGarageManager) obj;
+        if (!Objects.equals(this.entryTerminal, other.entryTerminal)) {
+            return false;
+        }
+        if (!Objects.equals(this.exitTerminal, other.exitTerminal)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ParkingGarageManager{" + "entryTerminal=" + entryTerminal + ", exitTerminal=" + exitTerminal + '}';
+    }
+    
+    
   
 } 

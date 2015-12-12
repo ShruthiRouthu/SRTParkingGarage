@@ -39,6 +39,33 @@ public class FlatHourlyRateParkingFeeCalculator  implements ParkingFeeStrategy{
         }  
         return fee;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + (int) (Double.doubleToLongBits(this.hourlyCharge) ^ (Double.doubleToLongBits(this.hourlyCharge) >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FlatHourlyRateParkingFeeCalculator other = (FlatHourlyRateParkingFeeCalculator) obj;
+        if (Double.doubleToLongBits(this.hourlyCharge) != Double.doubleToLongBits(other.hourlyCharge)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "FlatHourlyRateParkingFeeCalculator{" + "hourlyCharge=" + hourlyCharge + '}';
+    }
     
     
     

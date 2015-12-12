@@ -1,5 +1,7 @@
 package srtparkinggarage;
 
+import java.util.Objects;
+
 /**
  *
  * @author Shruthi Routhu
@@ -65,5 +67,40 @@ public class Receipt {
     public final String getParkingGarageName() {
         return parkingGarageName;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 83 * hash + Objects.hashCode(this.parkingGarageName);
+        hash = 83 * hash + Objects.hashCode(this.receiptFormatStrategy);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Receipt other = (Receipt) obj;
+        if (!Objects.equals(this.parkingGarageName, other.parkingGarageName)) {
+            return false;
+        }
+        if (!Objects.equals(this.receiptFormatStrategy, other.receiptFormatStrategy)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Receipt{" + "parkingGarageName=" + parkingGarageName + ", receiptFormatStrategy=" + receiptFormatStrategy + '}';
+    }
+    
+    
+    
+    
  
 }

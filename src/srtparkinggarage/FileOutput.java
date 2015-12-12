@@ -1,6 +1,8 @@
 
 package srtparkinggarage;
 
+import java.util.Objects;
+
 /**
  *
  * @author Shruthi Routhu
@@ -40,6 +42,33 @@ public class FileOutput implements OutputStrategy {
     //GETTER
     public final String getFileName() {
         return fileName;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 13 * hash + Objects.hashCode(this.fileName);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FileOutput other = (FileOutput) obj;
+        if (!Objects.equals(this.fileName, other.fileName)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "FileOutput{" + "fileName=" + fileName + '}';
     }
     
    

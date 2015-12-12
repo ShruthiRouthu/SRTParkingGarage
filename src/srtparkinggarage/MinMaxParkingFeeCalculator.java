@@ -93,6 +93,45 @@ public class MinMaxParkingFeeCalculator  implements ParkingFeeStrategy{
         return fee;   
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 13 * hash + (int) (Double.doubleToLongBits(this.minimumCharge) ^ (Double.doubleToLongBits(this.minimumCharge) >>> 32));
+        hash = 13 * hash + (int) (Double.doubleToLongBits(this.minimumChargeHours) ^ (Double.doubleToLongBits(this.minimumChargeHours) >>> 32));
+        hash = 13 * hash + (int) (Double.doubleToLongBits(this.additionalHourlyCharge) ^ (Double.doubleToLongBits(this.additionalHourlyCharge) >>> 32));
+        hash = 13 * hash + (int) (Double.doubleToLongBits(this.maximumCharge) ^ (Double.doubleToLongBits(this.maximumCharge) >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MinMaxParkingFeeCalculator other = (MinMaxParkingFeeCalculator) obj;
+        if (Double.doubleToLongBits(this.minimumCharge) != Double.doubleToLongBits(other.minimumCharge)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.minimumChargeHours) != Double.doubleToLongBits(other.minimumChargeHours)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.additionalHourlyCharge) != Double.doubleToLongBits(other.additionalHourlyCharge)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.maximumCharge) != Double.doubleToLongBits(other.maximumCharge)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "MinMaxParkingFeeCalculator{" + "minimumCharge=" + minimumCharge + ", minimumChargeHours=" + minimumChargeHours + ", additionalHourlyCharge=" + additionalHourlyCharge + ", maximumCharge=" + maximumCharge + '}';
+    }
+
     
     
     

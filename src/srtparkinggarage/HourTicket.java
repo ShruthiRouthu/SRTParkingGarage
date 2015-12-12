@@ -1,5 +1,6 @@
 package srtparkinggarage;
 
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -56,6 +57,41 @@ public class HourTicket implements TicketStrategy{
     public final String getCarID() {
         return carID;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.carID);
+        hash = 29 * hash + this.ticketID;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final HourTicket other = (HourTicket) obj;
+        if (!Objects.equals(this.carID, other.carID)) {
+            return false;
+        }
+        if (this.ticketID != other.ticketID) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "HourTicket{" + "carID=" + carID + ", ticketID=" + ticketID + '}';
+    }
+    
+    
+    
+    
     
     
 }

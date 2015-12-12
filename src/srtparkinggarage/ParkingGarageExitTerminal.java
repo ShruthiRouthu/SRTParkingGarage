@@ -1,5 +1,7 @@
 package srtparkinggarage;
 
+import java.util.Objects;
+
 /**
  *
  * @author Shruthi Routhu
@@ -57,6 +59,41 @@ public class ParkingGarageExitTerminal {
             throws IllegalArgumentException{
         //validate parameters
         this.runningTotalManager.setRunningTotalOpStrategy(runningTotalOpStrategy);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 37 * hash + Objects.hashCode(this.receipt);
+        hash = 37 * hash + Objects.hashCode(this.runningTotalManager);
+        hash = 37 * hash + Objects.hashCode(this.parkingFeeStrategy);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ParkingGarageExitTerminal other = (ParkingGarageExitTerminal) obj;
+        if (!Objects.equals(this.receipt, other.receipt)) {
+            return false;
+        }
+        if (!Objects.equals(this.runningTotalManager, other.runningTotalManager)) {
+            return false;
+        }
+        if (!Objects.equals(this.parkingFeeStrategy, other.parkingFeeStrategy)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ParkingGarageExitTerminal{" + "receipt=" + receipt + ", runningTotalManager=" + runningTotalManager + ", parkingFeeStrategy=" + parkingFeeStrategy + '}';
     }
     
     

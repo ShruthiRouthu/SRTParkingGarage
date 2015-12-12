@@ -2,6 +2,7 @@ package srtparkinggarage;
 
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  *
@@ -89,6 +90,37 @@ public class RunningTotalManager {
 
     public final double getFeeCollectedToday() {
         return feeCollectedToday;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.parkingGarageName);
+        hash = 37 * hash + Objects.hashCode(this.runningTotalOpStrategy);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RunningTotalManager other = (RunningTotalManager) obj;
+        if (!Objects.equals(this.parkingGarageName, other.parkingGarageName)) {
+            return false;
+        }
+        if (!Objects.equals(this.runningTotalOpStrategy, other.runningTotalOpStrategy)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "RunningTotalManager{" + "parkingGarageName=" + parkingGarageName + ", runningTotalOpStrategy=" + runningTotalOpStrategy + '}';
     }
     
    

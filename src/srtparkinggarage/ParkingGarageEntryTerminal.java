@@ -1,5 +1,9 @@
 package srtparkinggarage; 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 /**
  *
  * @author Shruthi Routhu
@@ -9,18 +13,18 @@ public class ParkingGarageEntryTerminal {
     private static final String CAR_IN_GARAGE = "Sorry ! Car is already parked ." ;
     private static final String INVALID_TICKET_STRATEGY = " Ticket Strategy is invalid" ;
     
-  //  private TicketStrategy ticketStrategy ;
-    private TicketStrategy[] ticketList ; 
+  
+    private List<TicketStrategy> ticketList ; 
+
+  
     
     //CONSTRUCTOR
     public ParkingGarageEntryTerminal()throws IllegalArgumentException {
-      //  setTicketStrategy(ticketStrategy);
-        clearTicketList();
-        
+        this.ticketList = new ArrayList<TicketStrategy>();         
     }
     
     // METHODS
-    public final void parkCar(TicketStrategy ticket) throws IllegalArgumentException {
+    public final void parkCar(final TicketStrategy ticket) throws IllegalArgumentException {
         //validate ticket before using
         String carID = ticket.getCarID();
         
@@ -41,7 +45,7 @@ public class ParkingGarageEntryTerminal {
         if(index == -1){
            throw new  IllegalArgumentException( carID + " " + CAR_NOT_FOUND_MSG );
         }
-        return ticketList[index]; 
+        return ticketList.get(index); 
     }
     
     // deletes ticket if that ticket is in ticketList else throws exception
@@ -51,49 +55,25 @@ public class ParkingGarageEntryTerminal {
             throw new IllegalArgumentException(CAR_NOT_FOUND_MSG);
         }
         else {
-            TicketStrategy[] temp = new TicketStrategy[ticketList.length - 1] ; //Creating temporary array
-
-            //  logic to copy lineItems array to temp array after leaving out selected item
-            int j = 0;
-            for (int i=0; i<ticketList.length; i++){
-                if(i != index){
-                    temp[j]= ticketList[i];
-                    j++;
-                }
-            }
-            // Swapping arrays
-            ticketList = temp; 
-            temp = null; 
+           this.ticketList.remove(index);
         }
     }
     
     public final void clearTicketList(){
-         this.ticketList = new HourTicket[0];
+         this.ticketList.clear();
     }
     
     // PRIVATE METHODS
     private void addTicketToList(final TicketStrategy ticket){
-        //Creating temporary array
-        TicketStrategy[] temp = new TicketStrategy[ticketList.length + 1] ; 
-        
-        // Copying ticketList array to temp array
-        System.arraycopy(ticketList, 0, temp, 0, ticketList.length ); 
-        
-        // Swapping arrays
-        ticketList = temp; 
-        temp = null;
-        
-        // Adding new ticket to array
-        ticketList[ticketList.length-1] = ticket; 
-        
+         this.ticketList.add(ticket);
     }
  
     private int findCar(final String carID) {
         int index = -1; // Flag
                
         // looping through ticketList Array
-        for (int i = 0; i < ticketList.length; i++) {
-            if (ticketList[i].getCarID().equals(carID) ) {
+        for (int i = 0; i < ticketList.size(); i++) {
+            if ( ticketList.get(i).getCarID().equals(carID) ) {
                 index = i;
                 break;
             }
@@ -102,17 +82,32 @@ public class ParkingGarageEntryTerminal {
         return index;
     }
     
-    //SETTER
-//    public void setTicketStrategy(TicketStrategy ticketStrategy) {
-//         if(ticketStrategy != null){
-//            this.ticketStrategy = ticketStrategy;
-//         }else{
-//             throw new IllegalArgumentException(INVALID_TICKET_STRATEGY);
-//         }
-             
-        
-//    }
+    @Override
+    public String toString() {
+        return "ParkingGarageEntryTerminal{" + "ticketList=" + ticketList + '}';
+    }
     
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 83 * hash + Objects.hashCode(this.ticketList);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ParkingGarageEntryTerminal other = (ParkingGarageEntryTerminal) obj;
+        if (!Objects.equals(this.ticketList, other.ticketList)) {
+            return false;
+        }
+        return true;
+    }
     
 //    //method to test array behaviour
 //    public String getCarList(){
@@ -128,7 +123,7 @@ public class ParkingGarageEntryTerminal {
 //        ParkingGarageEntryTerminal et = new ParkingGarageEntryTerminal();
 //        System.out.println( et.findCar("C100"));
 //        et.parkCar("C100", 3);
-//        System.out.println( et.findCar("C100"))
+//        System.out.println( et.findCar("C100"));
 //        et.parkCar("C200", 4);
 //        et.parkCar("C300", 5);
 //        
