@@ -1,5 +1,7 @@
 package srtparkinggarage;
 
+import filemanagementsystem.FileFormatStrategy;
+import java.io.File;
 import java.util.Objects;
 
 /**
@@ -8,7 +10,9 @@ import java.util.Objects;
  */
 public class ParkingGarageExitTerminal {
 
-    private static final String PARAMETER_NULL_MSG = "Method Parameter cannot be null" ;
+    private static final String PARAMETER_NULL_MSG = "ParkingGarageExitTerminal : Method Parameter cannot be null" ;
+    private static final String INVALID_STRING_PARAMETER_MSG = "ParkingGarageExitTerminal : String parameter not valid" ;
+    private static final String INVALID_FILE_MSG = "ParkingGarageExitTerminal : File not valid" ;
     
     private Receipt receipt;
     private RunningTotalManager runningTotalManager;
@@ -16,13 +20,13 @@ public class ParkingGarageExitTerminal {
     
     //CONSTRUCTOR
     public ParkingGarageExitTerminal(final String parkingGarageName, final ParkingFeeStrategy parkingFeeStrategy,
-           final ReceiptFormatStrategy receiptFormatStrategy,final OutputStrategy runningTotalOpStrategy )
-           throws IllegalArgumentException {
+           final ReceiptFormatStrategy receiptFormatStrategy,final OutputStrategy receiptOpStrategy,final File totalsFile , 
+            final FileFormatStrategy fileFormatStrategy ) throws IllegalArgumentException {
        
         // need to validate parameters before using
         setParkingFeeStrategy(parkingFeeStrategy);
-        this.receipt = new Receipt(parkingGarageName, receiptFormatStrategy);
-        this.runningTotalManager = new RunningTotalManager(parkingGarageName ,runningTotalOpStrategy);
+        this.receipt = new Receipt(parkingGarageName, receiptFormatStrategy,  receiptOpStrategy);
+        this.runningTotalManager = new RunningTotalManager(parkingGarageName, totalsFile, fileFormatStrategy );
     }
     
     //METHODS
@@ -45,22 +49,62 @@ public class ParkingGarageExitTerminal {
         if(parkingFeeStrategy != null){
             this.parkingFeeStrategy = parkingFeeStrategy;
         }else{
-           throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
         } 
+    }
+    
+    public final void setParkingGarageName(final String parkingGarageName) throws IllegalArgumentException {
+        
+        if((parkingGarageName != null) && (parkingGarageName.length() > 0)){
+            receipt.setParkingGarageName(parkingGarageName);
+            runningTotalManager.setParkingGarageName(parkingGarageName);
+        }else{
+            throw new IllegalArgumentException(INVALID_STRING_PARAMETER_MSG);
+        }
+        
     }
     
     public final void setReceiptFormatStrategy(final ReceiptFormatStrategy receiptFormatStrategy)
             throws IllegalArgumentException{
-        //validate parameters
-        this.receipt.setReceiptFormatStrategy(receiptFormatStrategy);
+       
+        if(receiptFormatStrategy != null){
+            this.receipt.setReceiptFormatStrategy(receiptFormatStrategy);
+        }else{
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+        }
+        
     }
      
-    public final void setRTOutputStrategy(final OutputStrategy runningTotalOpStrategy)
+    public final void setReceiptOutputStrategy(final OutputStrategy receiptOutputStrategy)
             throws IllegalArgumentException{
-        //validate parameters
-        this.runningTotalManager.setRunningTotalOpStrategy(runningTotalOpStrategy);
+        
+        if(receiptOutputStrategy != null){
+            this.receipt.setReceiptOutputStrategy(receiptOutputStrategy);
+        }else{
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+        }
+        
     }
+    
+    public final void setFileSystem(File totalsFile , FileFormatStrategy fileFormatStrategy)throws IllegalArgumentException {
+        
+        if( (totalsFile != null) && fileFormatStrategy != null ){
+            if( totalsFile.exists()){
+                this.runningTotalManager.setFileSystem(totalsFile, fileFormatStrategy);
+            }
+            else{
+               throw new IllegalArgumentException(INVALID_FILE_MSG); 
+            }
+        }
+        else{
+           throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
+        }
+        
+    }
+   
+   
 
+    //MANDATORY METHODS
     @Override
     public int hashCode() {
         int hash = 5;
@@ -71,7 +115,7 @@ public class ParkingGarageExitTerminal {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -85,10 +129,7 @@ public class ParkingGarageExitTerminal {
         if (!Objects.equals(this.runningTotalManager, other.runningTotalManager)) {
             return false;
         }
-        if (!Objects.equals(this.parkingFeeStrategy, other.parkingFeeStrategy)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.parkingFeeStrategy, other.parkingFeeStrategy);
     }
 
     @Override

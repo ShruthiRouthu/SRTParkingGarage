@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author Shruthi Routhu
  */
-public interface FormatStrategy {
+public interface FileFormatStrategy {
     
     public List<String> encode(final List<Map<String,Object>> myFormatData);
     

@@ -9,18 +9,21 @@ import java.util.Map;
  *
  * @author Shruthi Routhu
  */
-public class CSVFormatter implements FormatStrategy {
+public class CSVFormatter implements FileFormatStrategy {
     
     private static final String DATE_TIME = "DateTime";
     private static final String TOTAL_HOURS = "TotalHours";
     private static final String TOTAL_FEES = "TotalFees";
   
-    private static final String VALIDATION_MSG = "Input to method is invalid!" ;
+    private static final String INVALID_DATA_MSG = "CSVFormatter : No Data !" ;
     
     @Override
     public final List<String> encode(final List<Map<String, Object>> myFormatData)  throws IllegalArgumentException {
         if( myFormatData== null || myFormatData.isEmpty()) {
-            throw new IllegalArgumentException(VALIDATION_MSG);
+            
+            System.out.println(INVALID_DATA_MSG);
+            return null;
+            
         }
         
         List<String> writeData = new ArrayList<>();
@@ -43,7 +46,7 @@ public class CSVFormatter implements FormatStrategy {
                                   
             writeData.add(line.toString());
            
-           // System.out.println(writeData.toString());
+           //System.out.println(writeData.toString());
         }
      
         return writeData;
@@ -52,7 +55,10 @@ public class CSVFormatter implements FormatStrategy {
     @Override
     public final List<Map<String, Object>> decode(final List<String> rawData) throws IllegalArgumentException{
         if( rawData== null || rawData.isEmpty()) {
-            throw new IllegalArgumentException(VALIDATION_MSG);
+            
+            System.out.println(INVALID_DATA_MSG);
+            return null;
+            
         }
        
         List<Map<String, Object>> decodedData = new ArrayList<>();
@@ -74,7 +80,7 @@ public class CSVFormatter implements FormatStrategy {
             if(!totalLine.isEmpty()){
                 lineParts = totalLine.split(",");
                 
-                if(lineParts.length == 6){
+                if(lineParts.length == 3){
                     map.put(DATE_TIME, lineParts[0]);
                     map.put(TOTAL_HOURS, lineParts[1]);
                     map.put(TOTAL_FEES, lineParts[2]);
@@ -86,20 +92,20 @@ public class CSVFormatter implements FormatStrategy {
         return decodedData;
     }
     
-    //  MANDATORY METHODS
+    //MANDATORY METHODS
     @Override
-    public final String toString() {
+    public String toString() {
         return "CSVFormatter{" + '}';
     }
 
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         int hash = 3;
         return hash;
     }
 
     @Override
-    public final boolean equals(final Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

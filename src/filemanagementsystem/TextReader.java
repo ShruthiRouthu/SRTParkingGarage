@@ -15,12 +15,22 @@ import java.util.Map;
  */
 public class TextReader {
     
-    private final static String VALIDATION_MSG = "Input argument cannot be null" ;
+    private static final String PARAMETER_NULL_MSG = "TextReader : Input argument cannot be null" ;
+    private static final String INVALID_FILE_MSG = "TextReader  : File not valid";
+    private static final String INVALID_DATA_MSG = "TextReader : No Data !" ;
+   
     
-    public final List<Map<String,Object>> read(final File file, final FormatStrategy formatStrategy) throws IllegalArgumentException {
-        
-        if( !file.exists() || (formatStrategy == null)){
-            throw new IllegalArgumentException(VALIDATION_MSG); 
+    public final List<Map<String,Object>> read(final File file, final FileFormatStrategy fileFormatStrategy)
+            throws IllegalArgumentException {
+      
+        if( (file == null) || (fileFormatStrategy == null) ){
+           
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
+            
+        }else if( !file.exists() ){
+            
+            throw new IllegalArgumentException(INVALID_FILE_MSG);
+            
         }
                 
         // Reading from  file 
@@ -35,8 +45,10 @@ public class TextReader {
                     rawData.add(line);
                     line = reader.readLine();
                 }
+                
 //                System.out.println("Reading Test");
 //                System.out.println(rawData.toString());
+                
             }catch(IOException ioe){
                 System.out.println(ioe.getMessage());
             }
@@ -49,20 +61,52 @@ public class TextReader {
                 }
             }
             
-        // converting data to my custom format  
-        return formatStrategy.decode(rawData);
+        // converting data to my custom format 
+        if( (rawData == null) || (rawData.isEmpty()) ) {
+            
+             System.out.println(INVALID_DATA_MSG);  
+             return null;
+             
+        } 
+        return fileFormatStrategy.decode(rawData);
         
     }
 
+    public final Map<String,Object> getLastLine(final File file, final FileFormatStrategy fileFormatStrategy) 
+            throws IllegalArgumentException {
+       
+        if( (file == null) || (fileFormatStrategy == null) ){
+           
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
+            
+        }else if( !file.exists() ){
+            
+            throw new IllegalArgumentException(INVALID_FILE_MSG);
+            
+        }
+        
+        List<Map<String,Object>> allLines = this.read(file, fileFormatStrategy);
+        
+        if(  (allLines == null) || ( allLines.isEmpty() )  ){
+            
+            System.out.println(INVALID_DATA_MSG);  
+            return null;
+            
+        }
+        
+        Map<String,Object> lastLine  = allLines.get(allLines.size()-1);
+        return lastLine;
+    }
+    
     // MANDATORY METHODS
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         int hash = 3;
         return hash;
     }
 
     @Override
-    public final boolean equals(final Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -74,7 +118,7 @@ public class TextReader {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return "TextReader{" + '}';
     }
     

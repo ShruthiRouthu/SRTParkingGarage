@@ -1,0 +1,5 @@
+DateTime|TotalHours|TotalFees
+
+2015-12-13T15:05:18.093|100.0|100.00
+
+

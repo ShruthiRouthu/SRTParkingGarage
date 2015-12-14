@@ -15,13 +15,15 @@ public class Receipt {
             
     private String parkingGarageName;
     private ReceiptFormatStrategy receiptFormatStrategy;
+    private OutputStrategy receiptOutputStrategy;
     
     //CONSTRUCTOR
-    public Receipt(final String parkingGarageName, final ReceiptFormatStrategy receiptFormatStrategy) 
-            throws IllegalArgumentException {
+    public Receipt(final String parkingGarageName, final ReceiptFormatStrategy receiptFormatStrategy, 
+            final OutputStrategy receiptOutputStrategy) throws IllegalArgumentException {
        
         setParkingGarageName(parkingGarageName);
         setReceiptFormatStrategy(receiptFormatStrategy) ;
+        setReceiptOutputStrategy(receiptOutputStrategy);
     }
  
     //METHODS
@@ -30,7 +32,7 @@ public class Receipt {
         //need to validate parameters properly before using
         if(parkingFee > 0){
             String receiptString = getRecieptString(ticket, parkingFee,payType);
-            System.out.println(receiptString);
+            this.receiptOutputStrategy.outputData(receiptString);
         }
         else{
             throw new IllegalArgumentException(INVALID_CHECKOUT);
@@ -62,22 +64,33 @@ public class Receipt {
             throw new IllegalArgumentException(PARAMETER_NULL_MSG);
         }
     }
-   
+
+    public final void setReceiptOutputStrategy(OutputStrategy receiptOutputStrategy) throws IllegalArgumentException  {
+        
+        if(receiptOutputStrategy != null){
+            this.receiptOutputStrategy = receiptOutputStrategy;
+        }else{
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+        }
+    }
+       
     //GETTER
     public final String getParkingGarageName() {
         return parkingGarageName;
     }
 
+    //Mandatory Methods
     @Override
     public int hashCode() {
-        int hash = 5;
+        int hash = 3;
         hash = 83 * hash + Objects.hashCode(this.parkingGarageName);
         hash = 83 * hash + Objects.hashCode(this.receiptFormatStrategy);
+        hash = 83 * hash + Objects.hashCode(this.receiptOutputStrategy);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -91,16 +104,17 @@ public class Receipt {
         if (!Objects.equals(this.receiptFormatStrategy, other.receiptFormatStrategy)) {
             return false;
         }
+        if (!Objects.equals(this.receiptOutputStrategy, other.receiptOutputStrategy)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Receipt{" + "parkingGarageName=" + parkingGarageName + ", receiptFormatStrategy=" + receiptFormatStrategy + '}';
+        return "Receipt{" + "parkingGarageName=" + parkingGarageName + ", receiptFormatStrategy=" + receiptFormatStrategy + ", receiptOutputStrategy=" + receiptOutputStrategy + '}';
     }
     
-    
-    
-    
+ 
  
 }

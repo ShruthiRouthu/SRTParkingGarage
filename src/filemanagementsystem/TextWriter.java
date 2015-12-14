@@ -15,27 +15,43 @@ import java.util.Map;
  */
 public class TextWriter {
     
-    private static final String VALIDATION_MSG = "Input argument cannot be null" ; 
+    private static final String PARAMETER_NULL_MSG = "TextWriter : Input argument cannot be null" ;
+    private static final String INVALID_FILE_MSG = "TextWriter : File not valid" ;
+     private static final String INVALID_DATA_MSG = "FileService :  No data to write !" ; 
      
-    public final void write(final File file, FormatStrategy formatStrategy ,final List<Map<String,Object>> myFormatData) throws IllegalArgumentException {
-         
-        if( !file.exists() || (formatStrategy == null) || (myFormatData == null)){
-            throw new IllegalArgumentException(VALIDATION_MSG); 
-        } 
+    public final void write(final File file, FileFormatStrategy fileFormatStrategy ,final List<Map<String,Object>> myFormatData)
+            throws IllegalArgumentException {
+        
+        
+        if( (file == null) || (fileFormatStrategy == null ) ){
+            
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+            
+        } else if( !file.exists() ){
+            
+            throw new IllegalArgumentException(INVALID_FILE_MSG);
+            
+        }else if( (myFormatData == null) || (  myFormatData.isEmpty() )  ){
+           
+            System.out.println(INVALID_DATA_MSG);
+            return;
+            
+        }
         
         // send  data to formatStrategy.encode() to convert data to  desired format
-        List<String> writeData = formatStrategy.encode(myFormatData);
+        List<String> writeData = fileFormatStrategy.encode(myFormatData);
          
         //write this data to file
         PrintWriter writer = null ;
             try{
-                writer = new PrintWriter(new BufferedWriter(new FileWriter(file,false)));
+                writer = new PrintWriter(new BufferedWriter(new FileWriter(file,true)));
+                writer.println("\n");
                 for(String line : writeData){
                     writer.println(line);
                 }
               
             }catch(IOException ioe){
-                System.out.println(ioe.getMessage());
+                System.out.println("TextWriter : " + ioe.getMessage());
             }
             finally{
                 writer.close();
@@ -43,14 +59,15 @@ public class TextWriter {
         
     }
 
+    //MANDATORY METHODS
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         int hash = 3;
         return hash;
     }
 
     @Override
-    public final boolean equals(final Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -62,7 +79,7 @@ public class TextWriter {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return "TextWriter{" + '}';
     }
  

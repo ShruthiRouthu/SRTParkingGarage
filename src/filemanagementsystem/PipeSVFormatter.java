@@ -9,18 +9,21 @@ import java.util.Map;
  *
  * @author Shruthi Routhu
  */
-public class PipeSVFormatter implements FormatStrategy {
+public class PipeSVFormatter implements FileFormatStrategy {
 
     private static final String DATE_TIME = "DateTime";
     private static final String TOTAL_HOURS = "TotalHours";
     private static final String TOTAL_FEES = "TotalFees";
   
-    private static final String VALIDATION_MSG = "Input to method is invalid!" ;
+    private static final String INVALID_DATA_MSG = "PipeSVFormatter: No Data !" ;
     
     @Override
     public final List<String> encode(final List<Map<String, Object>> myFormatData)  throws IllegalArgumentException {
-        if( myFormatData== null || myFormatData.isEmpty()) {
-            throw new IllegalArgumentException(VALIDATION_MSG);
+        if( myFormatData == null || myFormatData.isEmpty()) {
+            
+            System.out.println(INVALID_DATA_MSG);
+            return null;
+            
         }
         
         List<String> writeData = new ArrayList<>();
@@ -43,16 +46,20 @@ public class PipeSVFormatter implements FormatStrategy {
                                   
             writeData.add(line.toString());
            
-           // System.out.println(writeData.toString());
+//            System.out.println(writeData.toString());
         }
      
         return writeData;
     }
 
     @Override
-    public final List<Map<String, Object>> decode(final List<String> rawData) throws IllegalArgumentException{
+    public final List<Map<String, Object>> decode(final List<String> rawData) throws IllegalArgumentException  {
+        
         if( rawData== null || rawData.isEmpty()) {
-            throw new IllegalArgumentException(VALIDATION_MSG);
+            
+            System.out.println(INVALID_DATA_MSG);
+            return null;
+            
         }
        
         List<Map<String, Object>> decodedData = new ArrayList<>();
@@ -72,9 +79,9 @@ public class PipeSVFormatter implements FormatStrategy {
             totalLine = totalLine.trim();
             
             if(!totalLine.isEmpty()){
-                lineParts = totalLine.split("|");
+                lineParts = totalLine.split("\\|");
                 
-                if(lineParts.length == 6){
+                if(lineParts.length == 3){
                     map.put(DATE_TIME, lineParts[0]);
                     map.put(TOTAL_HOURS, lineParts[1]);
                     map.put(TOTAL_FEES, lineParts[2]);
@@ -85,5 +92,31 @@ public class PipeSVFormatter implements FormatStrategy {
       
         return decodedData;
     }
+
+    //MANDATORY METHODS
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PipeSVFormatter other = (PipeSVFormatter) obj;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "PipeSVFormatter{" + '}';
+    }
+    
+    
     
 }

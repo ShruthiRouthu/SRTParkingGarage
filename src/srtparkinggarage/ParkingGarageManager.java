@@ -1,5 +1,7 @@
 package srtparkinggarage;
 
+import filemanagementsystem.FileFormatStrategy;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -9,20 +11,27 @@ import java.util.Objects;
  */
 public class ParkingGarageManager {
     
+    private static final String PARAMETER_NULL_MSG = "ParkingGarageManager : Method Parameter cannot be null" ;
+    private static final String INVALID_STRING_PARAMETER_MSG = "ParkingGarageManager : String parameter not valid" ;
+    private static final String INVALID_FILE_MSG = "ParkingGarageManager : File not valid" ;
+    
     private ParkingGarageEntryTerminal entryTerminal; 
     private ParkingGarageExitTerminal exitTerminal ;
     
     //CONSTRUCTOR
     public ParkingGarageManager(final String parkingGarageName,
-           final ParkingFeeStrategy parkingFeeStrategy,
-           final ReceiptFormatStrategy receiptFormatStrategy, final OutputStrategy runningTotalOpStrategy ) {
-        
-        try{
+            final ParkingFeeStrategy parkingFeeStrategy,
+            final ReceiptFormatStrategy receiptFormatStrategy,
+            final OutputStrategy receiptOutputStrategy,
+            final File totalsFile,
+            final FileFormatStrategy fileFormatStrategy) {
+
+        try {
             //validate input before using
             this.entryTerminal = new ParkingGarageEntryTerminal();
             this.exitTerminal = new ParkingGarageExitTerminal(parkingGarageName, parkingFeeStrategy,
-                                    receiptFormatStrategy, runningTotalOpStrategy);
-        }catch(Exception e){
+                    receiptFormatStrategy, receiptOutputStrategy, totalsFile, fileFormatStrategy);
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -78,21 +87,35 @@ public class ParkingGarageManager {
         }    
     }
      
-    public final void setRTOutputStrategy(final OutputStrategy runningTotalOpStrategy){
+    public final void setReceiptOutputStrategy(final OutputStrategy receiptOutputStrategy){
         
         try{
             //validate parameters
-            this.exitTerminal.setRTOutputStrategy(runningTotalOpStrategy);
+            this.exitTerminal.setReceiptOutputStrategy(receiptOutputStrategy);
         }catch(Exception e){
             System.out.println(e.getMessage());
         }    
     }
     
-//    // Method to test how array is working
-//    public void getCarList(){
-//        System.out.println(this.entryTerminal.getCarList());
-//    }
+     public final void setFileSystem(File totalsFile , FileFormatStrategy fileFormatStrategy)throws IllegalArgumentException {
+        
+        if( (totalsFile != null) && fileFormatStrategy != null ){
+            if( totalsFile.exists()){
+                this.exitTerminal.setFileSystem(totalsFile, fileFormatStrategy); 
+            }
+            else{
+               throw new IllegalArgumentException(INVALID_FILE_MSG); 
+            }
+        }
+        else{
+           throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
+        }
+        
+    }
+   
+    
 
+    //MANDATORY METHODS
     @Override
     public int hashCode() {
         int hash = 3;
@@ -102,7 +125,7 @@ public class ParkingGarageManager {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -123,7 +146,11 @@ public class ParkingGarageManager {
     public String toString() {
         return "ParkingGarageManager{" + "entryTerminal=" + entryTerminal + ", exitTerminal=" + exitTerminal + '}';
     }
+
     
-    
+//    // Method to test how array is working
+//    public void getCarList(){
+//        System.out.println(this.entryTerminal.getCarList());
+//    }
   
 } 

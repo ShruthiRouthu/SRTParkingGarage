@@ -11,7 +11,10 @@ import java.util.Objects;
  */
 public class FileService {
     
-    private static final String VALIDATION_MSG = "Input argument cannot be null" ;
+    private static final String PARAMETER_NULL_MSG = "FileService : Input argument cannot be null" ;
+    private static final String INVALID_FILE_MSG = "FileService : File not valid" ;
+    private static final String INVALID_DATA_MSG = "FileService :  No data to write !" ;
+    
     
     private TextReader textReader;
     private TextWriter textWriter;
@@ -23,20 +26,62 @@ public class FileService {
     }
     
     // METHODS
-    public final List<Map<String,Object>> read(final File file, final FormatStrategy formatStrategy) throws IllegalArgumentException {
+    public final List<Map<String,Object>> read(final File file, final FileFormatStrategy fileFormatStrategy) throws IllegalArgumentException {
         
-        if( !file.exists() || (formatStrategy == null)){
-            throw new IllegalArgumentException(VALIDATION_MSG); 
+        if( (file == null) || (fileFormatStrategy == null )){
+            
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+            
+        }else if( ! file.exists() ){     
+            
+            throw new IllegalArgumentException(INVALID_FILE_MSG);
+            
         }
-        return textReader.read(file, formatStrategy);
+        
+        return textReader.read(file, fileFormatStrategy);
+        
+        
     }
     
-    public final void write(final File file, final FormatStrategy formatStrategy , final List<Map<String,Object>> myData) throws IllegalArgumentException{
+    public final void write(final File file, final FileFormatStrategy fileFormatStrategy , final List<Map<String,Object>> myData) 
+            throws IllegalArgumentException{
         
-        if( !file.exists() || (formatStrategy == null) || (myData == null)){
-            throw new IllegalArgumentException(VALIDATION_MSG); 
-        }
-        textWriter.write(file, formatStrategy, myData);
+        if( (file == null) || (fileFormatStrategy == null ) ){
+            
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
+            
+        } else if( ! file.exists() ){ 
+            
+            throw new IllegalArgumentException(INVALID_FILE_MSG);
+            
+        } else if( (myData == null) || (myData.isEmpty())  ){
+            
+            System.out.println(INVALID_DATA_MSG);  
+            return ;
+            
+        }  
+
+        textWriter.write(file, fileFormatStrategy, myData);
+        
+    }
+  
+    public final Map<String,Object> getLastLine(final File file, final FileFormatStrategy fileFormatStrategy) 
+            throws IllegalArgumentException{
+        
+        if( (file == null) || (fileFormatStrategy == null )){
+            
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+            
+        }else if( ! file.exists() ){     
+            
+            throw new IllegalArgumentException(INVALID_FILE_MSG);
+            
+        }     
+        
+        Map<String,Object> lastLine = textReader.getLastLine(file, fileFormatStrategy);
+        return lastLine;
+       
+ 
     }
     
     // SETTERS
@@ -45,7 +90,7 @@ public class FileService {
             this.textReader = textReader;
         }
         else{
-            throw new IllegalArgumentException(VALIDATION_MSG);
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
         }
     }
 
@@ -54,7 +99,7 @@ public class FileService {
             this.textWriter = textWriter;
         }
         else{
-            throw new IllegalArgumentException(VALIDATION_MSG);
+            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
         }
     }
 
@@ -69,7 +114,7 @@ public class FileService {
     
     // MANDATORY METHODS
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         int hash = 7;
         hash = 97 * hash + Objects.hashCode(this.textReader);
         hash = 97 * hash + Objects.hashCode(this.textWriter);
@@ -77,7 +122,7 @@ public class FileService {
     }
 
     @Override
-    public final boolean equals(final Object obj) {
+    public  boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -92,7 +137,7 @@ public class FileService {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return "FileService{" + "textReader=" + textReader + ", textWriter=" + textWriter + '}';
     }
     

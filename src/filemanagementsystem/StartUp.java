@@ -2,9 +2,9 @@ package filemanagementsystem;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  *
@@ -16,21 +16,39 @@ public class StartUp {
         
         FileService fileService = new FileService(new TextReader() , new TextWriter() );
         
-        //File myFile = new File("mailList.json");
-        File myFile = new File("/WCTC 2015 Fall/AdvancedJavaF/FileManagementSystem/src/filemanagementsystem/mailList.csv");
+        // File myFile = new File("F:/WCTC2015Fall/AdvancedJavaF/finalProject/SRTParkingGarageCurrent/SRTParkingGarage/src/PipeSVRunningTotals.txt");
+     
         
-        
-//        if(myFile.exists()){
-//            System.out.println(myFile.getCanonicalPath());
-//            System.out.println("YAy");
-//        }
-//    
+
+    File myFile = new File("F:" + File.separatorChar + "WCTC2015Fall" +File.separatorChar + "AdvancedJavaF" + 
+            File.separatorChar +  "finalProject" + File.separatorChar + "SRTParkingGarageCurrent" + 
+            File.separatorChar + "SRTParkingGarage" + File.separatorChar+ "src" + File.separatorChar + "RunningTotals.csv");
+
+
+
+//        File myFile = new File("F:" + File.separatorChar + "WCTC2015Fall" +File.separatorChar + "AdvancedJavaF" + 
+//                File.separatorChar +  "finalProject" + File.separatorChar + "SRTParkingGarageCurrent" + 
+//                File.separatorChar + "SRTParkingGarage" + File.separatorChar+ "src" + File.separatorChar + "PipeSVRunningTotals.txt");
+
+               
+        if(myFile.exists()){
+            System.out.println(myFile.getCanonicalPath());
+            System.out.println("YAy");
+        }
+    
         List<Map<String,Object>> data = fileService.read( myFile , new CSVFormatter());
         
-        for(Map m : data ){
-           System.out.println(m.toString()); 
-        }
+        System.out.println(fileService.read( myFile , new CSVFormatter()));
+
+//        for(Map m : data ){
+//           System.out.println(m.toString()); 
+//        }
+       
+        Map<String,Object> lastLine = fileService.getLastLine(myFile, new CSVFormatter());
         
+        System.out.println(fileService.getLastLine(myFile, new CSVFormatter()));
+       
+       
         fileService.write(myFile, new CSVFormatter() , data);
         
         
