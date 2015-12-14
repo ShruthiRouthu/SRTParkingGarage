@@ -4,15 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import srtparkinggarage.CustomIllegalArgumentException;
 
 
 /**
  *
  * @author Shruthi Routhu
  */
-public class StartUp {
+public class StartUp  {
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException,  CustomIllegalArgumentException {
         
         FileService fileService = new FileService(new TextReader() , new TextWriter() );
         

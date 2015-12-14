@@ -46,7 +46,7 @@ public class RunningTotalManager {
     
     //CONSTRUCTOR
     public RunningTotalManager(final String parkingGarageName, final File totalsFile , 
-            final FileFormatStrategy fileFormatStrategy) throws IllegalArgumentException {
+            final FileFormatStrategy fileFormatStrategy) throws CustomIllegalArgumentException {
        
         setParkingGarageName(parkingGarageName);
         this.fileService = new FileService(new TextReader(), new TextWriter());
@@ -58,7 +58,7 @@ public class RunningTotalManager {
 
     //METHODS
     public final void updateTotal( final double hours, final double fee ) 
-            throws IllegalArgumentException{
+            throws CustomIllegalArgumentException{
         
         if((hours > 0) && (fee > 0)){
             
@@ -75,7 +75,7 @@ public class RunningTotalManager {
     
     
     
-    public final void setTotals() throws IllegalArgumentException ,  DateTimeParseException{
+    public final void setTotals() throws CustomIllegalArgumentException ,  DateTimeParseException{
         
         Map<String,Object> latestTotals = fileService.getLastLine(this.totalsFile, this.fileFormatStrategy);
       
@@ -132,7 +132,7 @@ public class RunningTotalManager {
     
     
         
-    private void sendOwnerReport() throws IllegalArgumentException {
+    private void sendOwnerReport() throws  CustomIllegalArgumentException {
        
         Map<String,Object> totalsMap = new HashMap<>();
                 totalsMap.put(DATE_TIME, LocalDateTime.now());

@@ -4,114 +4,176 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import srtparkinggarage.CustomIllegalArgumentException;
 
 /**
+ * This is a Class which provides File manipulation services. It has
+ * <code>TextReader</code> and <code>TextWriter</code> objects to which tasks
+ * are delegated.
  *
  * @author Shruthi Routhu
  */
 public class FileService {
-    
-    private static final String PARAMETER_NULL_MSG = "FileService : Input argument cannot be null" ;
-    private static final String INVALID_FILE_MSG = "FileService : File not valid" ;
-    private static final String INVALID_DATA_MSG = "FileService :  No data to write !" ;
-    
-    
+
+    private static final String PARAMETER_NULL_MSG = "FileService : Input argument cannot be null";
+    private static final String INVALID_FILE_MSG = "FileService : File not valid";
+    private static final String INVALID_DATA_MSG = "FileService :  No data to write !";
+
     private TextReader textReader;
     private TextWriter textWriter;
 
     // CONSTRUCTOR
-    public FileService(final TextReader textReader, final TextWriter textWriter) throws IllegalArgumentException {
+    /**
+     * Constructor to create a <code>FileService</code> object
+     *
+     * @param textReader - <code>TextReader</code> object
+     * @param textWriter <code>TextWriter</code> objects
+     * @throws <code>CustomIllegalArgumentException</code> if input parameters
+     * are null.
+     */
+    public FileService(final TextReader textReader, final TextWriter textWriter) throws CustomIllegalArgumentException {
         setTextReader(textReader);
         setTextWriter(textWriter);
     }
-    
+
     // METHODS
-    public final List<Map<String,Object>> read(final File file, final FileFormatStrategy fileFormatStrategy) throws IllegalArgumentException {
-        
-        if( (file == null) || (fileFormatStrategy == null )){
-            
-            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
-            
-        }else if( ! file.exists() ){     
-            
-            throw new IllegalArgumentException(INVALID_FILE_MSG);
-            
+    /**
+     * Method to read data from file
+     *
+     * @param file - <code>File</code> object from which data is read.
+     * @param fileFormatStrategy <code>FileFormatStrategy</code> object used to
+     * decode data read from file
+     * @throws <code>CustomIllegalArgumentException</code> if input parameters
+     * are null or if File doesnot exist..
+     */
+    public final List<Map<String, Object>> read(final File file, final FileFormatStrategy fileFormatStrategy) throws CustomIllegalArgumentException {
+
+        if ((file == null) || (fileFormatStrategy == null)) {
+
+            throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
+
+        } else if (!file.exists()) {
+
+            throw new CustomIllegalArgumentException(INVALID_FILE_MSG);
+
         }
-        
+
         return textReader.read(file, fileFormatStrategy);
-        
-        
+
     }
-    
-    public final void write(final File file, final FileFormatStrategy fileFormatStrategy , final List<Map<String,Object>> myData) 
-            throws IllegalArgumentException{
-        
-        if( (file == null) || (fileFormatStrategy == null ) ){
-            
-            throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
-            
-        } else if( ! file.exists() ){ 
-            
-            throw new IllegalArgumentException(INVALID_FILE_MSG);
-            
-        } else if( (myData == null) || (myData.isEmpty())  ){
-            
-            System.out.println(INVALID_DATA_MSG);  
-            return ;
-            
-        }  
+
+    /**
+     * Method to write data to file
+     *
+     * @param file - <code>File</code> object to which data is written.
+     * @param fileFormatStrategy <code>FileFormatStrategy</code> object used to
+     * encode data
+     * @param myData data to write in format
+     * <code>List<Map<String, Object>></code>
+     * @throws <code>CustomIllegalArgumentException</code> if input parameters
+     * are null or if File doesnot exist..
+     */
+    public final void write(final File file, final FileFormatStrategy fileFormatStrategy, final List<Map<String, Object>> myData)
+            throws CustomIllegalArgumentException {
+
+        if ((file == null) || (fileFormatStrategy == null)) {
+
+            throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
+
+        } else if (!file.exists()) {
+
+            throw new CustomIllegalArgumentException(INVALID_FILE_MSG);
+
+        } else if ((myData == null) || (myData.isEmpty())) {
+
+            System.out.println(INVALID_DATA_MSG);
+            return;
+
+        }
 
         textWriter.write(file, fileFormatStrategy, myData);
-        
+
     }
-  
-    public final Map<String,Object> getLastLine(final File file, final FileFormatStrategy fileFormatStrategy) 
-            throws IllegalArgumentException{
-        
-        if( (file == null) || (fileFormatStrategy == null )){
-            
-            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
-            
-        }else if( ! file.exists() ){     
-            
-            throw new IllegalArgumentException(INVALID_FILE_MSG);
-            
-        }     
-        
-        Map<String,Object> lastLine = textReader.getLastLine(file, fileFormatStrategy);
+
+    /**
+     * Method to read last line of data from file
+     *
+     * @param file - <code>File</code> object from which data is read.
+     * @param fileFormatStrategy <code>FileFormatStrategy</code> object used to
+     * decode data read from file
+     * @throws <code>CustomIllegalArgumentException</code> if input parameters
+     * are null or if File doesnot exist..
+     */
+    public final Map<String, Object> getLastLine(final File file, final FileFormatStrategy fileFormatStrategy)
+            throws CustomIllegalArgumentException {
+
+        if ((file == null) || (fileFormatStrategy == null)) {
+
+            throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
+
+        } else if (!file.exists()) {
+
+            throw new CustomIllegalArgumentException(INVALID_FILE_MSG);
+
+        }
+
+        Map<String, Object> lastLine = textReader.getLastLine(file, fileFormatStrategy);
         return lastLine;
-       
- 
+
     }
-    
+
     // SETTERS
-    public final void setTextReader(final TextReader textReader) throws IllegalArgumentException {
-        if(textReader != null){
+    /**
+     * Method to set TextReader
+     *
+     * @param textReader <code>TextReader</code> object
+     * @throws <code>CustomIllegalArgumentException</code> if input parameter is
+     * null.
+     */
+    public final void setTextReader(final TextReader textReader) throws CustomIllegalArgumentException {
+        if (textReader != null) {
             this.textReader = textReader;
-        }
-        else{
-            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+        } else {
+            throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
         }
     }
 
-    public final void setTextWriter(final TextWriter textWriter) throws IllegalArgumentException {
-        if(textWriter != null){
+    /**
+     * Method to set TextWriter
+     *
+     * @param textWriter <code>TextWriter</code> object
+     * @throws <code>CustomIllegalArgumentException</code> if input parameter is
+     * null.
+     */
+    public final void setTextWriter(final TextWriter textWriter) throws CustomIllegalArgumentException {
+        if (textWriter != null) {
             this.textWriter = textWriter;
-        }
-        else{
-            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+        } else {
+            throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
         }
     }
 
+    /**
+     * Method to get TextReader
+     *
+     * @returns textReader <code>TextReader</code> object
+     *
+     */
     // GETTERS  
     public final TextReader getTextReader() {
         return textReader;
     }
-    
+
+    /**
+     * Method to get TextWriter
+     *
+     * @returns textWriter <code>TextWriter</code> object
+     *
+     */
     public final TextWriter getTextWriter() {
         return textWriter;
     }
-    
+
     // MANDATORY METHODS
     @Override
     public int hashCode() {
@@ -122,7 +184,7 @@ public class FileService {
     }
 
     @Override
-    public  boolean equals(final Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -140,6 +202,5 @@ public class FileService {
     public String toString() {
         return "FileService{" + "textReader=" + textReader + ", textWriter=" + textWriter + '}';
     }
-    
-   
+
 }
