@@ -68,8 +68,8 @@ public class EntryTimeTicket implements TicketStrategy {
             if (entryTime.isBefore(exitTime)) {
 
                 diff = Duration.between(entryTime, exitTime).abs();
-                // long temp = diff.toMinutes();
-                long temp = diff.toMillis(); //considering milli seconds as minutes for practicality
+                 long temp = diff.toMinutes();
+               // long temp = diff.toMillis(); //considering milli seconds as minutes for practicality
                 double parkedHours = temp / 60.0;
                 this.hoursParked = Double.parseDouble(formatter.format(parkedHours));
                 calcHours = false;

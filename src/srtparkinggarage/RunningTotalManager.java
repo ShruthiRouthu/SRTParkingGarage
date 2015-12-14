@@ -136,7 +136,7 @@ public class RunningTotalManager {
        
         Map<String,Object> totalsMap = new HashMap<>();
                 totalsMap.put(DATE_TIME, LocalDateTime.now());
-                totalsMap.put(TOTAL_HOURS, this.parkedHoursToday);
+                totalsMap.put(TOTAL_HOURS, formatter.format(this.parkedHoursToday));
                 totalsMap.put(TOTAL_FEES, formatter.format(this.feeCollectedToday));
         
         List<Map<String,Object>> updatedTotals = new ArrayList<>();
