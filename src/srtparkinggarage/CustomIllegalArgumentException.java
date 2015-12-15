@@ -21,7 +21,7 @@ public class CustomIllegalArgumentException extends Exception {
     /**
      * constructor which accepts message information.
      *
-     * @param - message a <code> String </code> object
+     *@param message a <code> String </code> object
      */
     public CustomIllegalArgumentException(String message) {
         super(message);

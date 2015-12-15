@@ -16,7 +16,8 @@ public class ConsoleOutput implements OutputStrategy {
      * Method to output data to console
      *
      * @param opString - data type  <code>String</code>
-     * @throws <code>  CustomIllegalArgumentException </code> which is a checked
+     * @throws srtparkinggarage.CustomIllegalArgumentException
+     * @throw <code>CustomIllegalArgumentException</code> which is a checked
      * Exception if the parameter is null or empty
      */
     @Override
