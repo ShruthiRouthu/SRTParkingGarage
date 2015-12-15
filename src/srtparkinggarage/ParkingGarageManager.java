@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- *
+ * This class manages all the operations of PArking Garage, all input will talk to only this class. 
+ * 
  * @author Shruthi Routhu
  */
 public class ParkingGarageManager {
@@ -19,22 +20,50 @@ public class ParkingGarageManager {
     private ParkingGarageExitTerminal exitTerminal ;
     
     //CONSTRUCTOR
+    /**
+     * Creates an object of <code>ParkingGarageManager</code>
+     *
+     * @param parkingGarageName of data type <code> String</code>
+     * @param parkingFeeStrategy of data type <code>ParkingFeeStrategy</code>
+     * @param receiptFormatStrategy of data type
+     * <code>ReceiptFormatStrategy</code>
+     * @param receiptOutputStrategy of data type <code>OutputStrategy</code>
+     * @param totalsFile of data type <code>File</code>
+     * @param fileFormatStrategy of data type <code>FileFormatStrategy</code>
+     * @throw <code>CustomIllegalArgumentException</code> if input parameters
+     * are null or empty(in case of strings)
+     */
     public ParkingGarageManager(final String parkingGarageName,
             final ParkingFeeStrategy parkingFeeStrategy,
             final ReceiptFormatStrategy receiptFormatStrategy,
             final OutputStrategy receiptOutputStrategy,
             final File totalsFile,
             final FileFormatStrategy fileFormatStrategy) {
-
+        
+      
         try {
-            //validate input before using
+
+            // Validation
+            if ((parkingGarageName == null) || (parkingGarageName.isEmpty())) {
+                throw new CustomIllegalArgumentException(INVALID_STRING_PARAMETER_MSG);
+            }
+            if ((parkingFeeStrategy == null) || (receiptFormatStrategy == null)
+                    || (receiptOutputStrategy == null) || (fileFormatStrategy == null) || (totalsFile == null)) {
+                throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
+            }
+            if (!totalsFile.exists()) {
+                throw new CustomIllegalArgumentException(INVALID_FILE_MSG);
+            }
+            
             this.entryTerminal = new ParkingGarageEntryTerminal();
             this.exitTerminal = new ParkingGarageExitTerminal(parkingGarageName, parkingFeeStrategy,
                     receiptFormatStrategy, receiptOutputStrategy, totalsFile, fileFormatStrategy);
-        } catch (Exception e) {
+            
+        } catch (CustomIllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }
+    
     
     // METHODS
     
@@ -136,10 +165,7 @@ public class ParkingGarageManager {
         if (!Objects.equals(this.entryTerminal, other.entryTerminal)) {
             return false;
         }
-        if (!Objects.equals(this.exitTerminal, other.exitTerminal)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.exitTerminal, other.exitTerminal);
     }
 
     @Override

@@ -3,83 +3,158 @@ package srtparkinggarage;
 import java.util.Objects;
 
 /**
+ * This class generates receipt information associated with a carID/ticket
+ * formats and outputs receipt as specified by delegating tasks to strategy
+ * objects
  *
  * @author Shruthi Routhu
  */
-
 public class Receipt {
-    
-    private static final String PARAMETER_NULL_MSG = "Method Parameter cannot be null" ;
-    private static final String INVALID_STRING_PARAMETER_MSG = "String parameter not valid" ;
-    private static final String INVALID_CHECKOUT = "Invalid checkout !";
-            
+
+    private static final String PARAMETER_NULL_MSG = "Method Parameter cannot be null";
+    private static final String INVALID_STRING_PARAMETER_MSG = "String parameter cannot be null or empty";
+    private static final String INVALID_CHECKOUT = "Parking fee cannot be <= 0 ! Invalid checkout !";
+
     private String parkingGarageName;
     private ReceiptFormatStrategy receiptFormatStrategy;
     private OutputStrategy receiptOutputStrategy;
-    
+
     //CONSTRUCTOR
-    public Receipt(final String parkingGarageName, final ReceiptFormatStrategy receiptFormatStrategy, 
-            final OutputStrategy receiptOutputStrategy) throws IllegalArgumentException {
-       
+    /**
+     * Creates an <code>Receipt</code> object
+     *
+     * @param parkingGarageName of data type <code> String</code>
+     * @param receiptFormatStrategy of data type
+     * <code>ReceiptFormatStrategy</code>
+     * @param receiptOutputStrategy of data type <code>OutputStrategy</code>
+     * @throws srtparkinggarage.CustomIllegalArgumentException
+     * @throw <code>CustomIllegalArgumentException</code> if input parameters
+     * are null or empty(in case of strings)
+     */
+    public Receipt(final String parkingGarageName, final ReceiptFormatStrategy receiptFormatStrategy,
+            final OutputStrategy receiptOutputStrategy) throws CustomIllegalArgumentException {
+
         setParkingGarageName(parkingGarageName);
-        setReceiptFormatStrategy(receiptFormatStrategy) ;
+        setReceiptFormatStrategy(receiptFormatStrategy);
         setReceiptOutputStrategy(receiptOutputStrategy);
     }
- 
+
     //METHODS
-    public final void outputReceipt(final TicketStrategy ticket, final double parkingFee, final PaymentType payType) 
-    throws Exception {
-        //need to validate parameters properly before using
-        if(parkingFee > 0){
-            String receiptString = getRecieptString(ticket, parkingFee,payType);
+    /**
+     * Method to output receipt
+     *
+     * @param ticket of data type <code> TicketStrategy</code>
+     * @param parkingFee of data type <code>double</code>
+     * @param payType enum option of <code>PaymentType</code>
+     * @throws java.lang.Exception
+     * @throw <code>Exception</code> if ticket is null or if parkingFee less
+     * than or equal to 0 also because date manipulations are involved
+     */
+    public final void outputReceipt(final TicketStrategy ticket, final double parkingFee, final PaymentType payType)
+            throws Exception {
+
+        if (ticket == null) {
+            throw new CustomIllegalArgumentException("ticket: " + PARAMETER_NULL_MSG);
+        }
+
+        if (parkingFee > 0) {
+            String receiptString = getRecieptString(ticket, parkingFee, payType);
             this.receiptOutputStrategy.outputData(receiptString);
-        }
-        else{
-            throw new IllegalArgumentException(INVALID_CHECKOUT);
-        }
-    }
-    
-    private String getRecieptString(final TicketStrategy ticket, final double parkingFee, final PaymentType payType)throws Exception{
-        //need to validate parameters before using
-        return receiptFormatStrategy.getReceiptString(parkingGarageName, ticket, parkingFee, payType);
-    }
-    
-    // SETTER
-    public final void setParkingGarageName(final String parkingGarageName) throws IllegalArgumentException {
-        
-        if((parkingGarageName != null) && (parkingGarageName.length() > 0)){
-            this.parkingGarageName = parkingGarageName;
-        }else{
-            throw new IllegalArgumentException(INVALID_STRING_PARAMETER_MSG);
-        }
-        
-    }
-    
-    public final void setReceiptFormatStrategy(final ReceiptFormatStrategy receiptFormatStrategy) 
-            throws IllegalArgumentException {
-        
-        if(receiptFormatStrategy != null){
-            this.receiptFormatStrategy = receiptFormatStrategy;
-        }else{
-            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+        } else {
+            throw new CustomIllegalArgumentException(INVALID_CHECKOUT);
         }
     }
 
-    public final void setReceiptOutputStrategy(OutputStrategy receiptOutputStrategy) throws IllegalArgumentException  {
-        
-        if(receiptOutputStrategy != null){
-            this.receiptOutputStrategy = receiptOutputStrategy;
-        }else{
-            throw new IllegalArgumentException(PARAMETER_NULL_MSG);
+    /**
+     * Method to get formatted receipt as <code>string</code>
+     *
+     * @param ticket of data type <code> TicketStrategy</code>
+     * @param parkingFee of data type <code>double</code>
+     * @param payType enum option of <code>PaymentType</code>
+     * @return formatted receipt as <code>string</code>
+     * @throw <code>Exception</code> if ticket is null or if parkingFee less
+     * than or equal to 0 also because date manipulations are involved
+     */
+    private String getRecieptString(final TicketStrategy ticket, final double parkingFee, final PaymentType payType)
+            throws Exception {
+
+        if (ticket == null) {
+            throw new CustomIllegalArgumentException("ticket: " + PARAMETER_NULL_MSG);
+        }
+        if (parkingFee <= 0) {
+            throw new CustomIllegalArgumentException(INVALID_CHECKOUT);
+        }
+
+        return receiptFormatStrategy.getReceiptString(parkingGarageName, ticket, parkingFee, payType);
+    }
+
+    // SETTER
+    /**
+     * Method to set ParkingGarageName
+     *
+     * @param parkingGarageName of data type <code> String</code>
+     * @throws srtparkinggarage.CustomIllegalArgumentException
+     * @throw <code>CustomIllegalArgumentException</code> if input parameter is
+     * null or empty(in case of strings)
+     */
+    public final void setParkingGarageName(final String parkingGarageName) throws CustomIllegalArgumentException {
+
+        if ((parkingGarageName != null) && (parkingGarageName.length() > 0)) {
+            this.parkingGarageName = parkingGarageName;
+        } else {
+            throw new CustomIllegalArgumentException(INVALID_STRING_PARAMETER_MSG);
+        }
+
+    }
+
+    /**
+     * Method to set ReceiptFormatStrategy
+     *
+     * @param receiptFormatStrategy of data type
+     * <code>ReceiptFormatStrategy</code>
+     * @throws srtparkinggarage.CustomIllegalArgumentException
+     * @throw <code>CustomIllegalArgumentException</code> if input parameter is
+     * null
+     */
+    public final void setReceiptFormatStrategy(final ReceiptFormatStrategy receiptFormatStrategy)
+            throws CustomIllegalArgumentException {
+
+        if (receiptFormatStrategy != null) {
+            this.receiptFormatStrategy = receiptFormatStrategy;
+        } else {
+            throw new CustomIllegalArgumentException("receiptFormatStrategy : " + PARAMETER_NULL_MSG);
         }
     }
-       
+
+    /**
+     * Method to set ReceiptOutputStrategy
+     *
+     * @param receiptOutputStrategy of data type
+     * <code>ReceiptOutputStrategy</code>
+     * @throws srtparkinggarage.CustomIllegalArgumentException
+     * @throw <code>CustomIllegalArgumentException</code> if input parameter is
+     * null
+     */
+    public final void setReceiptOutputStrategy(OutputStrategy receiptOutputStrategy) throws CustomIllegalArgumentException {
+
+        if (receiptOutputStrategy != null) {
+            this.receiptOutputStrategy = receiptOutputStrategy;
+        } else {
+            throw new CustomIllegalArgumentException("receiptOutputStrategy: " + PARAMETER_NULL_MSG);
+        }
+    }
+
     //GETTER
+    /**
+     * Method to set ParkingGarageName
+     * 
+     * @return <code>String</code> object
+     */
     public final String getParkingGarageName() {
         return parkingGarageName;
     }
 
-    //Mandatory Methods
+    //MANDATORY METHODS
     @Override
     public int hashCode() {
         int hash = 3;
@@ -104,10 +179,7 @@ public class Receipt {
         if (!Objects.equals(this.receiptFormatStrategy, other.receiptFormatStrategy)) {
             return false;
         }
-        if (!Objects.equals(this.receiptOutputStrategy, other.receiptOutputStrategy)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.receiptOutputStrategy, other.receiptOutputStrategy);
     }
 
     @Override

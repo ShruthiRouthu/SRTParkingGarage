@@ -1,92 +1,157 @@
-package srtparkinggarage; 
+package srtparkinggarage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
+ * This class manages the parked car list ie list of tickets and has methods for
+ * managing this list Also has a method to park car .
  *
  * @author Shruthi Routhu
  */
 public class ParkingGarageEntryTerminal {
-    private static final String CAR_NOT_FOUND_MSG = "Car not found" ;
-    private static final String CAR_IN_GARAGE = "Sorry ! Car is already parked ." ;
-    private static final String INVALID_TICKET_STRATEGY = " Ticket Strategy is invalid" ;
-    
-  
-    private List<TicketStrategy> ticketList ; 
 
-  
-    
+    private static final String CAR_NOT_FOUND_MSG = "Car not found";
+    private static final String CAR_IN_GARAGE = "Sorry ! Cannot park ! Car is already parked .";
+    private static final String INVALID_TICKET_STRATEGY = " Ticket Strategy cannot be null! ";
+    private static final String INVALID_STRING_MSG = "Sorry ! Input String cannot be null or empty ! ";
+
+    private List<TicketStrategy> ticketList;
+
     //CONSTRUCTOR
-    public ParkingGarageEntryTerminal()throws IllegalArgumentException {
-        this.ticketList = new ArrayList<TicketStrategy>();         
+    /**
+     * Creates an object of <code>ParkingGarageEntryTerminal</code> and
+     * initializes ticket list
+     */
+    public ParkingGarageEntryTerminal() {
+        this.ticketList = new ArrayList<TicketStrategy>();
     }
-    
+
     // METHODS
-    public final void parkCar(final TicketStrategy ticket) throws IllegalArgumentException {
-        //validate ticket before using
-        String carID = ticket.getCarID();
-        
-        // if the carid is already in the ticketList , exception is thrown 
-        if(findCar(carID) == -1){
-            this.addTicketToList(ticket) ;
+    /**
+     * Method to park car.
+     *
+     * @param ticket  <code>TicketStrategy </code> object
+     * @throws <code>CustomIllegalArgumentException</code> if ticket is null or
+     * if the car associated with the ticket is already parked
+     */
+    public final void parkCar(final TicketStrategy ticket) throws CustomIllegalArgumentException {
+
+        if (ticket == null) {
+            throw new CustomIllegalArgumentException(INVALID_TICKET_STRATEGY);
         }
-        else{
-           throw new  IllegalArgumentException( carID + ":  " + CAR_IN_GARAGE ); 
+
+        String carID = ticket.getCarID();
+
+        // if the carId is already in the ticketList , exception is thrown 
+        if (findCar(carID) == -1) {
+            this.addTicketToList(ticket);
+        } else {
+            throw new CustomIllegalArgumentException(carID + ":  " + CAR_IN_GARAGE);
         }
     }
 
-    //returns ticket if that ticket is in ticketList else throws exception
-    public final TicketStrategy getTicket(final String carID) throws IllegalArgumentException{
-        //validate input before using
+    /**
+     * Method returns ticket associated with the given carID
+     *
+     * @param carID  <code>String</code> object
+     * @returns <code>TicketStrategy </code> object
+     * @throws <code>CustomIllegalArgumentException</code> if carID is null or
+     * if that ticket is not in ticketList
+     */
+    public final TicketStrategy getTicket(final String carID) throws CustomIllegalArgumentException {
+
+        if (carID == null) {
+            throw new CustomIllegalArgumentException(INVALID_STRING_MSG);
+        }
+
         int index = findCar(carID);
+
         // if Car not in list throw exception
-        if(index == -1){
-           throw new  IllegalArgumentException( carID + " " + CAR_NOT_FOUND_MSG );
+        if (index == -1) {
+            throw new CustomIllegalArgumentException(carID + " " + CAR_NOT_FOUND_MSG);
         }
-        return ticketList.get(index); 
+
+        return ticketList.get(index);
     }
-    
-    // deletes ticket if that ticket is in ticketList else throws exception
-    public final void deleteTicketFromList(final String carID) throws IllegalArgumentException {
+
+    /**
+     * Method to delete ticket associated with given carID from ticket list
+     *
+     * @param carID  <code>String</code> object
+     * @throws <code>CustomIllegalArgumentException</code> if carID is null or
+     * if that ticket is not in ticketList
+     */
+    public final void deleteTicketFromList(final String carID) throws CustomIllegalArgumentException {
+
+        if (carID == null) {
+            throw new CustomIllegalArgumentException(INVALID_STRING_MSG);
+        }
+
         int index = findCar(carID);
-        if(index == -1){
-            throw new IllegalArgumentException(CAR_NOT_FOUND_MSG);
-        }
-        else {
-           this.ticketList.remove(index);
+
+        if (index == -1) {
+            throw new CustomIllegalArgumentException(CAR_NOT_FOUND_MSG);
+        } else {
+            this.ticketList.remove(index);
         }
     }
-    
-    public final void clearTicketList(){
-         this.ticketList.clear();
+
+    /**
+     * Method to empty the ticket list
+     *
+     */
+    public final void clearTicketList() {
+        this.ticketList.clear();
     }
-    
+
     // PRIVATE METHODS
-    private void addTicketToList(final TicketStrategy ticket){
-         this.ticketList.add(ticket);
+    /**
+     * Method to add the ticket to list
+     *
+     * @param ticket  <code>TicketStrategy </code> object
+     * @throws <code>CustomIllegalArgumentException</code> if ticket is null
+     */
+    private void addTicketToList(final TicketStrategy ticket) throws CustomIllegalArgumentException {
+        if (ticket == null) {
+            throw new CustomIllegalArgumentException(INVALID_TICKET_STRATEGY);
+        }
+        this.ticketList.add(ticket);
     }
- 
-    private int findCar(final String carID) {
+
+    /**
+     * Method to find ticket associated with the given carID
+     *
+     * @param carID  <code>String</code> object
+     * @returns position of carID/ticket in ticket list
+     * @throws <code>CustomIllegalArgumentException</code> if carID is null
+     */
+    private int findCar(final String carID) throws CustomIllegalArgumentException {
+
+        if (carID == null) {
+            throw new CustomIllegalArgumentException(INVALID_STRING_MSG);
+        }
+
         int index = -1; // Flag
-               
+
         // looping through ticketList Array
         for (int i = 0; i < ticketList.size(); i++) {
-            if ( ticketList.get(i).getCarID().equals(carID) ) {
+            if (ticketList.get(i).getCarID().equals(carID)) {
                 index = i;
                 break;
             }
         }
-        
+
         return index;
     }
-    
+
+    // MANDATORY METHODS
     @Override
     public String toString() {
         return "ParkingGarageEntryTerminal{" + "ticketList=" + ticketList + '}';
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -95,7 +160,7 @@ public class ParkingGarageEntryTerminal {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -105,7 +170,7 @@ public class ParkingGarageEntryTerminal {
         final ParkingGarageEntryTerminal other = (ParkingGarageEntryTerminal) obj;
         return Objects.equals(this.ticketList, other.ticketList);
     }
-    
+
 //    //method to test array behaviour
 //    public String getCarList(){
 //        String cars = "" ;
@@ -114,7 +179,6 @@ public class ParkingGarageEntryTerminal {
 //        }
 //        return cars + "\n";
 //    }
-    
 // UNIT TESTING 
 //    public static void main(String[] args) {
 //        ParkingGarageEntryTerminal et = new ParkingGarageEntryTerminal();
@@ -128,8 +192,4 @@ public class ParkingGarageEntryTerminal {
 //        et.deleteTicketFromList("C100");
 //        System.out.println( et.isCarInGarage("C100"));
 //    }
-
-   
-    
-
 }
