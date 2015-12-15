@@ -2,23 +2,23 @@ package srtparkinggarage;
 
 import filemanagementsystem.FileFormatStrategy;
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * This class manages all the operations of PArking Garage, all input will talk to only this class. 
- * 
+ * This class manages all the operations of PArking Garage, all input will talk
+ * have to this class.
+ *
  * @author Shruthi Routhu
  */
 public class ParkingGarageManager {
-    
-    private static final String PARAMETER_NULL_MSG = "ParkingGarageManager : Method Parameter cannot be null" ;
-    private static final String INVALID_STRING_PARAMETER_MSG = "ParkingGarageManager : String parameter not valid" ;
-    private static final String INVALID_FILE_MSG = "ParkingGarageManager : File not valid" ;
-    
-    private ParkingGarageEntryTerminal entryTerminal; 
-    private ParkingGarageExitTerminal exitTerminal ;
-    
+
+    private static final String PARAMETER_NULL_MSG = "ParkingGarageManager : Method Parameter cannot be null";
+    private static final String INVALID_STRING_PARAMETER_MSG = "ParkingGarageManager : String parameter cannot be null or empty";
+    private static final String INVALID_FILE_MSG = "ParkingGarageManager : File not valid";
+
+    private ParkingGarageEntryTerminal entryTerminal;
+    private ParkingGarageExitTerminal exitTerminal;
+
     //CONSTRUCTOR
     /**
      * Creates an object of <code>ParkingGarageManager</code>
@@ -30,8 +30,6 @@ public class ParkingGarageManager {
      * @param receiptOutputStrategy of data type <code>OutputStrategy</code>
      * @param totalsFile of data type <code>File</code>
      * @param fileFormatStrategy of data type <code>FileFormatStrategy</code>
-     * @throw <code>CustomIllegalArgumentException</code> if input parameters
-     * are null or empty(in case of strings)
      */
     public ParkingGarageManager(final String parkingGarageName,
             final ParkingFeeStrategy parkingFeeStrategy,
@@ -39,8 +37,7 @@ public class ParkingGarageManager {
             final OutputStrategy receiptOutputStrategy,
             final File totalsFile,
             final FileFormatStrategy fileFormatStrategy) {
-        
-      
+
         try {
 
             // Validation
@@ -54,95 +51,146 @@ public class ParkingGarageManager {
             if (!totalsFile.exists()) {
                 throw new CustomIllegalArgumentException(INVALID_FILE_MSG);
             }
-            
+
             this.entryTerminal = new ParkingGarageEntryTerminal();
             this.exitTerminal = new ParkingGarageExitTerminal(parkingGarageName, parkingFeeStrategy,
                     receiptFormatStrategy, receiptOutputStrategy, totalsFile, fileFormatStrategy);
-            
+
         } catch (CustomIllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }
-    
-    
+
     // METHODS
-    
-    // car will be parked only if that car (i.e carID) is not parked before
-    // Parking a car without checking it out first will be prevented.
-    public final void parkCar(TicketStrategy ticketStrategy){
-        try{ 
-           //validate input before using 
-           this.entryTerminal.parkCar(ticketStrategy);
-        }catch(Exception e){
+    /**
+     * Method to park car. Car will be parked only if that car (i.e carID) is
+     * not parked before Parking a car without checking it out first will be
+     * prevented.
+     *
+     * @param ticketStrategy  <code>TicketStrategy </code> object
+     */
+    public final void parkCar(TicketStrategy ticketStrategy) {
+        try {
+            if (ticketStrategy != null) {
+                this.entryTerminal.parkCar(ticketStrategy);
+            } else {
+                throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
+            }
+
+        } catch (CustomIllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
-    } 
-  
-    // first checks wearher that car is in parking garage, if thats true
-    // then prints receipt and running totals, 
-    // receipt and runningtotals wont be printed if checkout is invalid i.e hrs > 24
-    // if checkout happens successfully then that car is deleted from Ticketlist/ database .
-    
-    public final void checkOutCar(final String carID, final PaymentType payType){
-        try{
-            //validate input before using
+    }
+
+    /**
+     * Method to check out a car from parking garage first checks weather that
+     * car is in parking garage, if thats true then prints receipt and running
+     * totals, receipt and running totals wont be printed if checkout is invalid
+     * i.e hrs > 24 if checkout happens successfully then that car is deleted
+     * from Ticket list .
+     *
+     * @param carID of data type <code>String</code>
+     * @param payType enum option of <code>PaymentType</code>
+     */
+    public final void checkOutCar(final String carID, final PaymentType payType) {
+        try {
+            if ((carID == null) || (carID.isEmpty())) {
+                throw new CustomIllegalArgumentException(INVALID_STRING_PARAMETER_MSG);
+            }
             TicketStrategy selectedTicket = entryTerminal.getTicket(carID);
             exitTerminal.checkOutCar(selectedTicket, payType);
             this.entryTerminal.deleteTicketFromList(carID);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-    
+
     //SETTERS
-    public final void setParkingFeeStrategy( final ParkingFeeStrategy parkingFeeStrategy ) {
-           
-        
-        try{
-            //validate parameters
-            this.exitTerminal.setParkingFeeStrategy(parkingFeeStrategy);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        } 
-    }
-    
-    public final void setReceiptFormatStrategy(final ReceiptFormatStrategy receiptFormatStrategy){
-        
-        try{    
-            //validate parameters
-            this.exitTerminal.setReceiptFormatStrategy(receiptFormatStrategy);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }    
-    }
-     
-    public final void setReceiptOutputStrategy(final OutputStrategy receiptOutputStrategy){
-        
-        try{
-            //validate parameters
-            this.exitTerminal.setReceiptOutputStrategy(receiptOutputStrategy);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }    
-    }
-    
-     public final void setFileSystem(File totalsFile , FileFormatStrategy fileFormatStrategy)throws IllegalArgumentException {
-        
-        if( (totalsFile != null) && fileFormatStrategy != null ){
-            if( totalsFile.exists()){
-                this.exitTerminal.setFileSystem(totalsFile, fileFormatStrategy); 
+    /**
+     * Method to set ParkingFeeStrategy
+     *
+     * @param parkingFeeStrategy of data type <code>ParkingFeeStrategy</code>
+     */
+    public final void setParkingFeeStrategy(final ParkingFeeStrategy parkingFeeStrategy) {
+
+        try {
+            if (parkingFeeStrategy != null) {
+                this.exitTerminal.setParkingFeeStrategy(parkingFeeStrategy);
+            } else {
+                throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
             }
-            else{
-               throw new IllegalArgumentException(INVALID_FILE_MSG); 
-            }
+
+        } catch (CustomIllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
-        else{
-           throw new IllegalArgumentException(PARAMETER_NULL_MSG); 
-        }
-        
+
     }
-   
-    
+
+    /**
+     * Method to set ReceiptFormatStrategy
+     *
+     * @param receiptFormatStrategy of data type
+     * <code>ReceiptFormatStrategy</code>
+     */
+    public final void setReceiptFormatStrategy(final ReceiptFormatStrategy receiptFormatStrategy) {
+
+        try {
+            if (receiptFormatStrategy != null) {
+                this.exitTerminal.setReceiptFormatStrategy(receiptFormatStrategy);
+            } else {
+                throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
+            }
+
+        } catch (CustomIllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Method to set ReceiptOutputStrategy
+     *
+     * @param receiptOutputStrategy of data type
+     * <code>ReceiptOutputStrategy</code>
+     */
+    public final void setReceiptOutputStrategy(final OutputStrategy receiptOutputStrategy) {
+
+        try {
+
+            if (receiptOutputStrategy != null) {
+                this.exitTerminal.setReceiptOutputStrategy(receiptOutputStrategy);
+            } else {
+                throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
+            }
+
+        } catch (CustomIllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Method to set FileSystem ie to set the file in which totals will be
+     * stored and the format in which the totals should be read and stored.
+     *
+     * @param totalsFile of data type <code>File</code>
+     * @param fileFormatStrategy of data type <code>FileFormatStrategy</code>
+     */
+    public final void setFileSystem(File totalsFile, FileFormatStrategy fileFormatStrategy) {
+
+        try {
+            if ((totalsFile != null) && fileFormatStrategy != null) {
+                if (totalsFile.exists()) {
+                    this.exitTerminal.setFileSystem(totalsFile, fileFormatStrategy);
+                } else {
+                    throw new CustomIllegalArgumentException(INVALID_FILE_MSG);
+                }
+            } else {
+                throw new CustomIllegalArgumentException(PARAMETER_NULL_MSG);
+            }
+        } catch (CustomIllegalArgumentException c) {
+            System.out.println(c.getMessage());
+        }
+
+    }
 
     //MANDATORY METHODS
     @Override
@@ -173,10 +221,8 @@ public class ParkingGarageManager {
         return "ParkingGarageManager{" + "entryTerminal=" + entryTerminal + ", exitTerminal=" + exitTerminal + '}';
     }
 
-    
 //    // Method to test how array is working
 //    public void getCarList(){
 //        System.out.println(this.entryTerminal.getCarList());
 //    }
-  
-} 
+}

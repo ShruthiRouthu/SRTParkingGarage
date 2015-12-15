@@ -34,8 +34,9 @@ public class NoTimeTicket implements TicketStrategy {
     /**
      * Constructor for creating an object of type <code>NoTimeTicket</code>
      *
-     * @param carID - data type <String> value to uniquely identify a car
-     * @throws <code>CustomIllegalArgumentException</code> if input parameters
+     * @param carID - data type <code>String</code>  value to uniquely identify a car
+     * @throws srtparkinggarage.CustomIllegalArgumentException
+     * @throw <code>CustomIllegalArgumentException</code> if input parameters
      * are invalid
      */
     public NoTimeTicket(final String carID) throws CustomIllegalArgumentException {
@@ -57,8 +58,8 @@ public class NoTimeTicket implements TicketStrategy {
 
         LocalDateTime exitTime = LocalDateTime.now(); // LocalDateTime.of(2015, 10, 19, 10, 05, 6,123 ); 
 
-        System.out.println("\n entry time: " + entryTime);
-        System.out.println("\n exit time: " + exitTime + "\n");
+        System.out.println("\nentry time: " + entryTime);
+        System.out.println("exit time: " + exitTime );
 
         Duration diff = Duration.between(entryTime, exitTime).abs();
         if (diff.toDays() <= 1) { //since cars are allowed to park for only 24 hrs or less
@@ -67,9 +68,14 @@ public class NoTimeTicket implements TicketStrategy {
             if (entryTime.isBefore(exitTime)) {
 
                 diff = Duration.between(entryTime, exitTime).abs();
-                // long temp = diff.toMinutes();
-                long temp = diff.toMillis(); //considering milli seconds as minutes for practicality
-                double parkedHours = temp / 60.0;
+                
+                System.out.println("Millisecond difference: " + diff.toMillis());
+               
+                long temp = diff.toMillis() * 1000 * 60; //converting milli seconds as minutes for practicality
+                
+                System.out.println("Multiplying milliseconds with 1000*60 for practicality " );
+                        
+                double parkedHours = temp / 3600000.0;
                 this.hoursParked = Double.parseDouble(formatter.format(parkedHours));
                 calcHours = false;
             }

@@ -25,7 +25,7 @@ public class ParkingGarageEntryTerminal {
      * initializes ticket list
      */
     public ParkingGarageEntryTerminal() {
-        this.ticketList = new ArrayList<TicketStrategy>();
+        this.ticketList = new ArrayList<>();
     }
 
     // METHODS
@@ -33,7 +33,8 @@ public class ParkingGarageEntryTerminal {
      * Method to park car.
      *
      * @param ticket  <code>TicketStrategy </code> object
-     * @throws <code>CustomIllegalArgumentException</code> if ticket is null or
+     * @throws srtparkinggarage.CustomIllegalArgumentException
+     * @throw <code>CustomIllegalArgumentException</code> if ticket is null or
      * if the car associated with the ticket is already parked
      */
     public final void parkCar(final TicketStrategy ticket) throws CustomIllegalArgumentException {
@@ -56,8 +57,9 @@ public class ParkingGarageEntryTerminal {
      * Method returns ticket associated with the given carID
      *
      * @param carID  <code>String</code> object
-     * @returns <code>TicketStrategy </code> object
-     * @throws <code>CustomIllegalArgumentException</code> if carID is null or
+     * @throws srtparkinggarage.CustomIllegalArgumentException
+     * @return <code>TicketStrategy </code> object
+     * @throw <code>CustomIllegalArgumentException</code> if carID is null or
      * if that ticket is not in ticketList
      */
     public final TicketStrategy getTicket(final String carID) throws CustomIllegalArgumentException {
@@ -80,7 +82,8 @@ public class ParkingGarageEntryTerminal {
      * Method to delete ticket associated with given carID from ticket list
      *
      * @param carID  <code>String</code> object
-     * @throws <code>CustomIllegalArgumentException</code> if carID is null or
+     * @throws srtparkinggarage.CustomIllegalArgumentException
+     * @throw <code>CustomIllegalArgumentException</code> if carID is null or
      * if that ticket is not in ticketList
      */
     public final void deleteTicketFromList(final String carID) throws CustomIllegalArgumentException {

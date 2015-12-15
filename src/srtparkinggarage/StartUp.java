@@ -48,17 +48,53 @@ public class StartUp {
             manager.parkCar(new NoTimeTicket("C600"));
 
             // Checking out cars
-            manager.setParkingFeeStrategy(minNoMaxFee);
+            //manager.setParkingFeeStrategy(minNoMaxFee);
+            
+            try {
+                Thread.sleep(200);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
 
             manager.checkOutCar("C100", PaymentType.CASH);
+            
+            try {
+                Thread.sleep(100);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
 
             manager.checkOutCar("C200", PaymentType.CARD);
+            
+            try {
+                Thread.sleep(500);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
 
             manager.checkOutCar("C300", PaymentType.CASH);
+            
+            try {
+                Thread.sleep(100);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
 
             manager.checkOutCar("C400", PaymentType.CASH);
+            
+            try {
+                Thread.sleep(100);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
 
             manager.checkOutCar("C500", PaymentType.CARD);
+            
+            try {
+                Thread.sleep(100);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
 
             manager.checkOutCar("C600", PaymentType.CASH);
 
