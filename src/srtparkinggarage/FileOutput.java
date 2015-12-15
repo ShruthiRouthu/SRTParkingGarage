@@ -4,46 +4,74 @@ package srtparkinggarage;
 import java.util.Objects;
 
 /**
+ * This class implements the interface <code>OutputStrategy</code> and has
+ * methods to output specified string data to File
  *
- * @author Shruthi Routhu
- */
+ * @author srouthu
+ * 
+*/
 public class FileOutput implements OutputStrategy {
-    
-    private static final String INVALID_STRING_PARAMETER_MSG = "String parameter not valid" ;
-    private static final String FAKING_FILEOP = "Data has been saved to file" ;
-    private static final String INVALID_FILE_NAME_MSG = "File name not valid" ;
-    
+
+    private static final String INVALID_STRING_PARAMETER_MSG = "FileOutput: Output data String cannot be null or empty ! ";
+    private static final String FAKING_FILEOP = "FileOutput: Data has been saved to file";
+    private static final String INVALID_FILE_NAME_MSG = "FileOutput: File name(String) cannot be null or empty";
+
     private String fileName;
 
-    //CONSTRUCTOR
-    public FileOutput(final String fileName) throws IllegalArgumentException{
+    /**
+     * Constructor returns an object of FileOutput Class
+     *
+     * @param fileName - data type  <code>String</code> which is the name of file
+     * you want to output to
+     * @throws <code>  CustomIllegalArgumentException </code> which is a checked
+     * Exception if the parameter is null or empty
+     */
+    public FileOutput(final String fileName) throws CustomIllegalArgumentException {
         setFileName(fileName);
     }
-        
+
+    /**
+     * Method to output data
+     *
+     * @param opString - data type  <code>String</code>
+     * @throws <code>  CustomIllegalArgumentException </code> which is a checked
+     * Exception if the parameter is null or empty
+     */
     @Override
-    public final void outputData(final String opString) throws IllegalArgumentException {
+    public final void outputData(final String opString) throws CustomIllegalArgumentException {
         // Faking output to some file
-        if(opString == null || opString.length() == 0){
-            throw new IllegalArgumentException(INVALID_STRING_PARAMETER_MSG );
+        if (opString == null || opString.length() == 0) {
+            throw new CustomIllegalArgumentException(INVALID_STRING_PARAMETER_MSG);
         }
         System.out.println(FAKING_FILEOP);
     }
-    
-    //SETTER
-    public final void setFileName(final String fileName) throws IllegalArgumentException{
-        if((fileName != null) && (fileName.length() > 0)){
+
+    /**
+     * Method to set fileName
+     *
+     * @param fileName - data type  <code>String</code>
+     * @throws <code>  CustomIllegalArgumentException </code> which is a checked
+     * Exception if the parameter is null or empty
+     */
+    public final void setFileName(final String fileName) throws CustomIllegalArgumentException {
+        if ((fileName != null) && (fileName.length() > 0)) {
             this.fileName = fileName;
-        }else{
-            throw new IllegalArgumentException(INVALID_FILE_NAME_MSG);
+        } else {
+            throw new CustomIllegalArgumentException(INVALID_FILE_NAME_MSG);
         }
-        
+
     }
-    
-    //GETTER
+
+    /**
+     * Method to get fileName
+     *
+     * @returns fileName - data type  <code>String</code>
+     */
     public final String getFileName() {
         return fileName;
     }
 
+    // MANDATORY METHODS
     @Override
     public int hashCode() {
         int hash = 7;
@@ -52,7 +80,7 @@ public class FileOutput implements OutputStrategy {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -70,9 +98,5 @@ public class FileOutput implements OutputStrategy {
     public String toString() {
         return "FileOutput{" + "fileName=" + fileName + '}';
     }
-    
-   
-    
-    
-    
+
 }

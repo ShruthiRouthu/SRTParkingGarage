@@ -2,44 +2,72 @@ package srtparkinggarage;
 
 /**
  *
+ * This class implements <code> ParkingFeeStrategy </code> and calculates
+ * parking fee based on hours parked. Hours are rounded to upper limit ie 2.1
+ * hrs = 3 hrs
+ *
  * @author Shruthi Routhu
- * Calculates fee based hours parked. hours are rounded to upper limit ie 2.1 hrs = 3 hrs
  */
-public class FlatHourlyRateParkingFeeCalculator  implements ParkingFeeStrategy{
+public class FlatHourlyRateParkingFeeCalculator implements ParkingFeeStrategy {
 
     private static final String INVALID_HOURLY_CHARGE = "Horly charge has to be greater than 0";
     private double hourlyCharge;
-    
+
     //CONSTRUCTOR
-    public FlatHourlyRateParkingFeeCalculator(final double hourlyCharge) throws IllegalArgumentException {
+    /**
+     * Creates an object of <code>FlatHourlyRateParkingFeeCalculator </code>
+     *
+     * @param hourlyCharge - datatype <code>double</code>
+     * @throws <code>CustomIllegalArgumentException</code> if hourly charge <= 0
+     */
+    public FlatHourlyRateParkingFeeCalculator(final double hourlyCharge) throws CustomIllegalArgumentException {
         setHourlyCharge(hourlyCharge);
     }
-    
-    //SETTER
-    public final void setHourlyCharge(final double hourlyCharge) throws IllegalArgumentException{
-        if(hourlyCharge > 0){
-            this.hourlyCharge = hourlyCharge;  
+
+//SETTER   
+    /**
+     * Method to set Hourly charge
+     *
+     * @param hourlyCharge - datatype <code>double</code>
+     * @throws <code>CustomIllegalArgumentException</code> if hourly charge <= 0
+     */
+    public final void setHourlyCharge(final double hourlyCharge) throws CustomIllegalArgumentException {
+        if (hourlyCharge > 0) {
+            this.hourlyCharge = hourlyCharge;
+        } else {
+            throw new CustomIllegalArgumentException(INVALID_HOURLY_CHARGE);
         }
-        else throw new IllegalArgumentException(INVALID_HOURLY_CHARGE);
     }
-    
+
     //GETTER
+    /**
+     * Method to get Hourly charge
+     *
+     * @returns hourly charge of datatype <code>double</code>
+     */
     public final double getHourlyCharge() {
         return hourlyCharge;
     }
-    
-    // This method calculates fee if (hours > 0), else returns a fee of $0
+
+    /**
+     * This method calculates fee if (hours > 0) and (hours <= 24), else returns
+     * a fee of $0
+     *
+     * @param hrs - datatype <code>double</code>
+     * @returns parking fees of datatype <code>double</code>
+     */
     @Override
     public final double calculateParkingFee(final double hrs) {
-        double fee=0;
+        double fee = 0;
         double hours = Math.ceil(hrs);
         // validating input
-        if(hours > 0 && hours <= 24){
-           fee = hours*hourlyCharge;
-        }  
+        if (hours > 0 && hours <= 24) {
+            fee = hours * hourlyCharge;
+        }
         return fee;
     }
 
+    // MANDATORY METHODS
     @Override
     public int hashCode() {
         int hash = 3;
@@ -66,7 +94,7 @@ public class FlatHourlyRateParkingFeeCalculator  implements ParkingFeeStrategy{
     public String toString() {
         return "FlatHourlyRateParkingFeeCalculator{" + "hourlyCharge=" + hourlyCharge + '}';
     }
-    
+
     
     
 }

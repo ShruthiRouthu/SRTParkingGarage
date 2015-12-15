@@ -1,6 +1,7 @@
 package srtparkinggarage;
 
 import filemanagementsystem.CSVFormatter;
+import filemanagementsystem.FileFormatStrategy;
 import java.io.File;
 import java.util.Random;
 import java.text.DateFormat;
@@ -51,14 +52,18 @@ public class StartUp {
        
 //----------------------------------------------------------------------------------------------------------------       
      
-       String garageName = "Best Value Parking Garage";
+       String garageName = ParkingGarageConfigFactory.getParkingGarageName();
+       File totalsFile = ParkingGarageConfigFactory.getTotalsFile();
+       FileFormatStrategy fileFormatStrategy = ParkingGarageConfigFactory.getFileFormatStrategyInstance();
+       ReceiptFormatStrategy receiptformatStrategy = ParkingGarageConfigFactory.getReceiptFormatStrategyInstance();
        
-          File myFile = new File("F:" + File.separatorChar + "WCTC2015Fall" +File.separatorChar + "AdvancedJavaF" + 
+         
+       File myFile = new File("F:" + File.separatorChar + "WCTC2015Fall" +File.separatorChar + "AdvancedJavaF" + 
             File.separatorChar +  "finalProject" + File.separatorChar + "SRTParkingGarageCurrent" + 
             File.separatorChar + "SRTParkingGarage" + File.separatorChar+ "src" + File.separatorChar + "RunningTotals.csv");
 
-       ParkingGarageManager manager = new ParkingGarageManager(garageName, hourlyFee, simpleReceipt, consoleOP,
-                                       myFile, new CSVFormatter() );
+       ParkingGarageManager manager = new ParkingGarageManager(garageName, hourlyFee, receiptformatStrategy, consoleOP,
+                                       totalsFile, fileFormatStrategy );
        
        
        manager.parkCar(new HourTicket("C100", 1));
@@ -74,8 +79,8 @@ public class StartUp {
 // 
 //////Changing strategies
 //       
-//       manager.setReceiptFormatStrategy(detailedReceipt);
-// //      manager.setRTOutputStrategy(guiOP);
+//      manager.setReceiptFormatStrategy(detailedReceipt);
+//      manager.setReceiptOutputStrategy(guiOP);
        
        manager.setParkingFeeStrategy(minNoMaxFee);
        
